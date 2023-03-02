@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import { useState } from "react";
 
 export default function MachineControls({ startDisabled, stopDisabled, reset, start, stop }) {
-  const [initialValue, setInitialValue] = useState(null)
+  const [initialValue, setInitialValue] = useState("")
 
   return (
     <Box>
