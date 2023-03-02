@@ -1,9 +1,14 @@
 import { useState } from "react";
 import MachineControls from "../components/MachineControls";
+import TransitionTable from "../components/TransitionTable";
 
 export default function Machines() {
   const [stopDisabled, setStopDisabled] = useState(true)
   const [startDisabled, setStartDisabled] = useState(false)
+
+  const transitionTableUpdated = () => {
+
+  }
 
   const resetPressed = (initialValue) => {
     console.log(initialValue)
@@ -23,7 +28,12 @@ export default function Machines() {
 
   return (
     <>
-    <MachineControls startDisabled={startDisabled} stopDisabled={stopDisabled} reset={resetPressed} start={startPressed} stop={stopPressed} />
+    <TransitionTable update={transitionTableUpdated} />
+    <MachineControls startDisabled={startDisabled}
+                     stopDisabled={stopDisabled}
+                     reset={resetPressed}
+                     start={startPressed}
+                     stop={stopPressed} />
     </>
   )
 }
