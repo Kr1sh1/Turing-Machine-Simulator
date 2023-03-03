@@ -1,6 +1,6 @@
 import { useState } from "react";
 import MachineControls from "../components/MachineControls";
-import TransitionTable from "../components/TransitionTable";
+import TransitionRepresentation from "../components/TransitionRepresentation";
 
 export default function Machines() {
   const [stopDisabled, setStopDisabled] = useState(true)
@@ -37,7 +37,7 @@ export default function Machines() {
 
   return (
     <>
-    <TransitionTable
+    <TransitionRepresentation
       transitions={transitions}
       setTransitions={setTransitions} />
 
