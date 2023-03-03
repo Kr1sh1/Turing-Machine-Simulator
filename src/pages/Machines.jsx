@@ -5,6 +5,7 @@ import TransitionTable from "../components/TransitionTable";
 export default function Machines() {
   const [stopDisabled, setStopDisabled] = useState(true)
   const [startDisabled, setStartDisabled] = useState(false)
+  const [initialValue, setInitialValue] = useState("");
   const [transitions, setTransitions] = useState(
     [
       {
@@ -18,7 +19,7 @@ export default function Machines() {
     ]
   )
 
-  const resetPressed = (initialValue) => {
+  const resetPressed = () => {
     console.log(initialValue)
     setStartDisabled(false)
     setStopDisabled(true)
@@ -36,12 +37,17 @@ export default function Machines() {
 
   return (
     <>
-    <TransitionTable transitions={transitions} setTransitions={setTransitions} />
-    <MachineControls startDisabled={startDisabled}
-                     stopDisabled={stopDisabled}
-                     reset={resetPressed}
-                     start={startPressed}
-                     stop={stopPressed} />
+    <TransitionTable
+      transitions={transitions}
+      setTransitions={setTransitions}
+      setInitialValue={setInitialValue} />
+
+    <MachineControls
+      startDisabled={startDisabled}
+      stopDisabled={stopDisabled}
+      reset={resetPressed}
+      start={startPressed}
+      stop={stopPressed} />
     </>
   )
 }

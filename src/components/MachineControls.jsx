@@ -1,16 +1,13 @@
 import { Button, Grid, TextField } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState } from "react";
 
-export default function MachineControls({ startDisabled, stopDisabled, reset, start, stop }) {
-  const [initialValue, setInitialValue] = useState("")
-
+export default function MachineControls({ startDisabled, stopDisabled, reset, start, stop, setInitialValue }) {
   return (
     <Box>
       <TextField label="Initial Input" margin="normal" fullWidth onChange={(event) => setInitialValue(event.target.value)} />
       <Grid container className="machine-controls" spacing={1}>
         <Grid item sm={4}>
-          <Button variant="contained" color="info" fullWidth onClick={() => reset(initialValue)}>Reset</Button>
+          <Button variant="contained" color="info" fullWidth onClick={reset}>Reset</Button>
         </Grid>
         <Grid item sm={4}>
           <Button variant="contained" color="success" fullWidth onClick={start} disabled={startDisabled}>Start</Button>
