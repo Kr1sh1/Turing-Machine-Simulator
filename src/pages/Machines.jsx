@@ -39,15 +39,15 @@ export default function Machines() {
     <>
     <TransitionTable
       transitions={transitions}
-      setTransitions={setTransitions}
-      setInitialValue={setInitialValue} />
+      setTransitions={setTransitions} />
 
     <MachineControls
       startDisabled={startDisabled}
       stopDisabled={stopDisabled}
       reset={resetPressed}
       start={startPressed}
-      stop={stopPressed} />
+      stop={stopPressed}
+      setInitialValue={setInitialValue} />
     </>
   )
 }
