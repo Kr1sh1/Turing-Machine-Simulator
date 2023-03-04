@@ -1,5 +1,4 @@
-import { Button, Grid, TextField } from "@mui/material";
-import { Box } from "@mui/system";
+import { Button, Grid, TextField, Box } from "@mui/material";
 
 export default function MachineControls({ startDisabled, stopDisabled, reset, start, stop, setInitialValue }) {
   return (

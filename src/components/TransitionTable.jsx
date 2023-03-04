@@ -1,10 +1,9 @@
 import {
-  Button, IconButton, MenuItem,
+  Box, Button, IconButton, MenuItem,
   Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow,
   TextField } from "@mui/material";
 
-import { Box } from "@mui/system";
 import { useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear"
 
