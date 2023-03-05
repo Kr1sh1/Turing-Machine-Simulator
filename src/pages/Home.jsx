@@ -1,5 +1,4 @@
-import { Button } from '@mui/material'
-import { Box } from '@mui/system'
+import { Box, Button } from '@mui/material'
 import { useNavigate } from 'react-router'
 
 export default function Home() {

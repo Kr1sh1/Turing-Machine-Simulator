@@ -1,10 +1,9 @@
 import {
-  Button, IconButton, MenuItem,
+  Box, Button, IconButton, MenuItem,
   Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow,
   TextField } from "@mui/material";
 
-import { Box } from "@mui/system";
 import { useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear"
 
@@ -48,29 +47,10 @@ export default function TransitionTable({ transitions, setTransitions }) {
     setTransitions(transitions.filter(transition => transition.id !== id))
   }
 
-  const transitionUpdate = (event, id, eventType) => {
+  const transitionUpdate = (event, id, column) => {
     let index = transitions.findIndex(transition => transition.id === id)
     let newTransitions = structuredClone(transitions)
-
-    switch (eventType) {
-      case 0:
-        newTransitions[index].state = event.target.value
-        break
-      case 1:
-        newTransitions[index].read = event.target.value
-        break
-      case 2:
-        newTransitions[index].write = event.target.value
-        break
-      case 3:
-        newTransitions[index].move = event.target.value
-        break
-      case 4:
-        newTransitions[index].nextState = event.target.value
-        break
-      default:
-        break;
-    }
+    newTransitions[index][column] = event.target.value
     setTransitions(newTransitions)
   }
 
@@ -92,12 +72,12 @@ export default function TransitionTable({ transitions, setTransitions }) {
           <TableBody>
             {transitions.map(transition => (
               <TableRow key={transition.id}>
-                <TableCell align="center"><TextField size="small" defaultValue={transition.state} onChange={event => transitionUpdate(event, transition.id, 0)} /></TableCell>
-                <TableCell align="center"><TextField size="small" defaultValue={transition.read} onChange={event => transitionUpdate(event, transition.id, 1)} inputProps={{ maxLength: 1 }} /></TableCell>
-                <TableCell align="center"><TextField size="small" defaultValue={transition.write} onChange={event => transitionUpdate(event, transition.id, 2)} inputProps={{ maxLength: 1 }} /></TableCell>
+                <TableCell align="center"><TextField size="small" value={transition.state} onChange={event => transitionUpdate(event, transition.id, "state")} /></TableCell>
+                <TableCell align="center"><TextField size="small" value={transition.read} onChange={event => transitionUpdate(event, transition.id, "read")} inputProps={{ maxLength: 1 }} /></TableCell>
+                <TableCell align="center"><TextField size="small" value={transition.write} onChange={event => transitionUpdate(event, transition.id, "write")} inputProps={{ maxLength: 1 }} /></TableCell>
 
                 <TableCell align="center">
-                  <TextField size="small" select defaultValue={transition.move} onChange={event => transitionUpdate(event, transition.id, 3)}>
+                  <TextField size="small" select value={transition.move} onChange={event => transitionUpdate(event, transition.id, "move")}>
                     {moves.map(move => (
                       <MenuItem key={move.value} value={move.value}>
                         {move.label}
@@ -106,7 +86,7 @@ export default function TransitionTable({ transitions, setTransitions }) {
                   </TextField>
                 </TableCell>
 
-                <TableCell align="center"><TextField size="small" defaultValue={transition.nextState} onChange={event => transitionUpdate(event, transition.id, 4)} /></TableCell>
+                <TableCell align="center"><TextField size="small" value={transition.nextState} onChange={event => transitionUpdate(event, transition.id, "nextState")} /></TableCell>
                 <TableCell>
                   <IconButton onClick={() => deleteRow(transition.id)}>
                     <ClearIcon color="error" />
