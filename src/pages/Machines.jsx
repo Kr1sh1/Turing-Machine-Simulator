@@ -6,18 +6,20 @@ export default function Machines() {
   const [stopDisabled, setStopDisabled] = useState(true)
   const [startDisabled, setStartDisabled] = useState(false)
   const [initialValue, setInitialValue] = useState("");
-  const [transitions, setTransitions] = useState(
-    [
-      {
-        id: 0,
-        state: "s1",
-        read: "1",
-        write: "1",
-        move: 0,
-        nextState: "s1",
-      }
-    ]
-  )
+  const [transitions, setTransitions] = useState([
+    {
+      id: 0,
+      state: "s1",
+      read: "1",
+      write: "1",
+      move: 0,
+      nextState: "s1",
+    }])
+  const [selections, setSelections] = useState({
+    "Initial State": "",
+    "Accepting State": "",
+    "Rejecting State": "",
+  })
 
   const resetPressed = () => {
     console.log(initialValue)
@@ -39,7 +41,9 @@ export default function Machines() {
     <>
     <TransitionRepresentation
       transitions={transitions}
-      setTransitions={setTransitions} />
+      setTransitions={setTransitions}
+      selections={selections}
+      setSelections={setSelections} />
 
     <MachineControls
       startDisabled={startDisabled}
