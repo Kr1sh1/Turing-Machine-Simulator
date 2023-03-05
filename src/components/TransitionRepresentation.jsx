@@ -14,20 +14,13 @@ export default function TransitionRepresentation({ transitions, setTransitions, 
     let orderedUniqueStates = [...uniqueStates]
     orderedUniqueStates.sort()
 
-    let keysToReset = []
     Object.keys(selections).forEach(type => {
       if (selections[type] !== "" && !orderedUniqueStates.includes(selections[type])) {
-        keysToReset.push(type)
+        selections[type] = ""
       }
-    });
-
-    let selectionsCopy = structuredClone(selections)
-    keysToReset.forEach(key => {
-      selectionsCopy[key] = ""
     })
 
-    setSelections(selectionsCopy)
-
+    setSelections(selections)
     setStates(orderedUniqueStates)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transitions]);
