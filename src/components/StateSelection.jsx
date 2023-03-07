@@ -1,6 +1,6 @@
 import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 
-export default function StateSelection({ states, selections, setSelections }) {
+export default function StateSelection({ states, selections, setSelections, editorIsLocked }) {
   const handleSelectionChange = (value, type) => {
     let otherTypes = Object.keys(selections).filter(selectionType => selectionType !== type)
     let sameValue = otherTypes.find(selectionType => selections[selectionType] === value)
@@ -16,7 +16,7 @@ export default function StateSelection({ states, selections, setSelections }) {
     <Grid container direction="column">
       {Object.keys(selections).map(type => (
         <Grid item key={type}>
-          <FormControl sx={{ minWidth: "160px", paddingBottom: "20px" }}>
+          <FormControl sx={{ minWidth: "160px", paddingBottom: "20px" }} disabled={editorIsLocked}>
             <InputLabel>{type}</InputLabel>
             <Select
               labelId="demo-simple-select-helper-label"

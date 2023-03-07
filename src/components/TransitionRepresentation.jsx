@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import StateSelection from "./StateSelection";
 import TransitionTable from "./TransitionTable";
 
-export default function TransitionRepresentation({ transitions, setTransitions, selections, setSelections }) {
+export default function TransitionRepresentation({ transitions, setTransitions, selections, setSelections, editorIsLocked, activeTransitionID }) {
   const [states, setStates] = useState([]);
 
   useEffect(() => {
@@ -28,8 +28,8 @@ export default function TransitionRepresentation({ transitions, setTransitions, 
 
   return (
     <>
-    <StateSelection states={states} selections={selections} setSelections={setSelections} />
-    <TransitionTable transitions={transitions} setTransitions={setTransitions} />
+    <StateSelection states={states} selections={selections} setSelections={setSelections} editorIsLocked={editorIsLocked} />
+    <TransitionTable transitions={transitions} setTransitions={setTransitions} editorIsLocked={editorIsLocked} activeTransitionID={activeTransitionID} />
     </>
   )
 }

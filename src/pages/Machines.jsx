@@ -3,8 +3,6 @@ import MachineControls from "../components/MachineControls";
 import TransitionRepresentation from "../components/TransitionRepresentation";
 
 export default function Machines() {
-  const [stopDisabled, setStopDisabled] = useState(true)
-  const [startDisabled, setStartDisabled] = useState(false)
   const [initialValue, setInitialValue] = useState("");
   const [transitions, setTransitions] = useState([
     {
@@ -20,21 +18,20 @@ export default function Machines() {
     "Accepting State": "",
     "Rejecting State": "",
   })
+  const [editorIsLocked, setEditorIsLocked] = useState(false)
+  const [activeTransitionID, setActiveTransitionID] = useState(-1)
+  const [turingMachineIsRunning, setTuringMachineIsRunning] = useState(false)
 
   const resetPressed = () => {
-    console.log(initialValue)
-    setStartDisabled(false)
-    setStopDisabled(true)
+    stopPressed()
   }
 
   const startPressed = () => {
-    setStartDisabled(true)
-    setStopDisabled(false)
+    setTuringMachineIsRunning(true)
   }
 
   const stopPressed = () => {
-    setStartDisabled(false)
-    setStopDisabled(true)
+    setTuringMachineIsRunning(false)
   }
 
   return (
@@ -43,15 +40,18 @@ export default function Machines() {
       transitions={transitions}
       setTransitions={setTransitions}
       selections={selections}
-      setSelections={setSelections} />
+      setSelections={setSelections}
+      editorIsLocked={editorIsLocked}
+      activeTransitionID={activeTransitionID} />
 
     <MachineControls
-      startDisabled={startDisabled}
-      stopDisabled={stopDisabled}
       reset={resetPressed}
       start={startPressed}
       stop={stopPressed}
-      setInitialValue={setInitialValue} />
+      setInitialValue={setInitialValue}
+      editorIsLocked={editorIsLocked}
+      setEditorIsLocked={setEditorIsLocked}
+      turingMachineIsRunning={turingMachineIsRunning} />
     </>
   )
 }

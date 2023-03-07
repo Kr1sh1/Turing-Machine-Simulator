@@ -33,7 +33,7 @@ const defaultTransition = {
   nextState: "",
 }
 
-export default function TransitionTable({ transitions, setTransitions }) {
+export default function TransitionTable({ transitions, setTransitions, editorIsLocked, activeTransitionID }) {
   const [counter, setCounter] = useState(1)
 
   const newRow = () => {
@@ -71,13 +71,13 @@ export default function TransitionTable({ transitions, setTransitions }) {
 
           <TableBody>
             {transitions.map(transition => (
-              <TableRow key={transition.id}>
-                <TableCell align="center"><TextField size="small" value={transition.state} onChange={event => transitionUpdate(event, transition.id, "state")} /></TableCell>
-                <TableCell align="center"><TextField size="small" value={transition.read} onChange={event => transitionUpdate(event, transition.id, "read")} inputProps={{ maxLength: 1 }} /></TableCell>
-                <TableCell align="center"><TextField size="small" value={transition.write} onChange={event => transitionUpdate(event, transition.id, "write")} inputProps={{ maxLength: 1 }} /></TableCell>
+              <TableRow key={transition.id} sx={{ backgroundColor: transition.id === activeTransitionID ? "green" : "white" }}>
+                <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.state} onChange={event => transitionUpdate(event, transition.id, "state")} /></TableCell>
+                <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.read} onChange={event => transitionUpdate(event, transition.id, "read")} inputProps={{ maxLength: 1 }} /></TableCell>
+                <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.write} onChange={event => transitionUpdate(event, transition.id, "write")} inputProps={{ maxLength: 1 }} /></TableCell>
 
                 <TableCell align="center">
-                  <TextField size="small" select value={transition.move} onChange={event => transitionUpdate(event, transition.id, "move")}>
+                  <TextField disabled={editorIsLocked} size="small" select value={transition.move} onChange={event => transitionUpdate(event, transition.id, "move")}>
                     {moves.map(move => (
                       <MenuItem key={move.value} value={move.value}>
                         {move.label}
@@ -86,9 +86,9 @@ export default function TransitionTable({ transitions, setTransitions }) {
                   </TextField>
                 </TableCell>
 
-                <TableCell align="center"><TextField size="small" value={transition.nextState} onChange={event => transitionUpdate(event, transition.id, "nextState")} /></TableCell>
+                <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.nextState} onChange={event => transitionUpdate(event, transition.id, "nextState")} /></TableCell>
                 <TableCell>
-                  <IconButton onClick={() => deleteRow(transition.id)}>
+                  <IconButton disabled={editorIsLocked} onClick={() => deleteRow(transition.id)}>
                     <ClearIcon color="error" />
                   </IconButton>
                 </TableCell>
@@ -98,7 +98,7 @@ export default function TransitionTable({ transitions, setTransitions }) {
         </Table>
       </TableContainer>
 
-      <Button variant="contained" sx={{ borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px" }} fullWidth onClick={newRow}>+</Button>
+      <Button variant="contained" sx={{ borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px" }} disabled={editorIsLocked} fullWidth onClick={newRow}>+</Button>
     </Box>
   )
 }
