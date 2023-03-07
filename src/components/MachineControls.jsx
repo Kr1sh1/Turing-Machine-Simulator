@@ -7,7 +7,7 @@ export default function MachineControls({
   return (
     <Box>
       <IconButton disabled={turingMachineIsRunning} onClick={() => setEditorIsLocked(!editorIsLocked)}>
-        {editorIsLocked ? <Lock sx={{ color: "gold" }} /> : <LockOpen sx={{ color: "green" }} />}
+        {editorIsLocked ? <Lock sx={{ color: turingMachineIsRunning ? "" : "gold" }} /> : <LockOpen sx={{ color: "green" }} />}
       </IconButton>
       <TextField label="Initial Input" margin="normal" fullWidth onChange={(event) => setInitialValue(event.target.value)} disabled={!editorIsLocked} />
       <Grid container className="machine-controls" spacing={1}>

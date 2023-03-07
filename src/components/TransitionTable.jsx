@@ -89,7 +89,7 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
                 <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.nextState} onChange={event => transitionUpdate(event, transition.id, "nextState")} /></TableCell>
                 <TableCell>
                   <IconButton disabled={editorIsLocked} onClick={() => deleteRow(transition.id)}>
-                    <ClearIcon color="error" />
+                    <ClearIcon color={editorIsLocked ? "disabled" : "error"} />
                   </IconButton>
                 </TableCell>
               </TableRow>
