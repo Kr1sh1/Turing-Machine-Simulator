@@ -2,11 +2,14 @@ import { Lock, LockOpen } from "@mui/icons-material";
 import { Button, TextField, Box, IconButton, Stack } from "@mui/material";
 
 export default function MachineControls({
-  reset, start, stop, setInitialValue,
+  reset, start, stop, lock, setInitialValue,
   editorIsLocked, setEditorIsLocked, turingMachineIsRunning }) {
   return (
     <Box>
-      <IconButton disabled={turingMachineIsRunning} onClick={() => setEditorIsLocked(!editorIsLocked)}>
+      <IconButton disabled={turingMachineIsRunning} onClick={() => {
+        if (!editorIsLocked) lock()
+        setEditorIsLocked(!editorIsLocked)
+      }}>
         {editorIsLocked ? <Lock sx={{ color: turingMachineIsRunning ? "" : "gold" }} /> : <LockOpen sx={{ color: "green" }} />}
       </IconButton>
       <TextField label="Initial Input" margin="normal" fullWidth onChange={(event) => setInitialValue(event.target.value)} disabled={!editorIsLocked} />

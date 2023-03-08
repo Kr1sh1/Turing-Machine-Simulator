@@ -37,7 +37,7 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
   const [counter, setCounter] = useState(1)
 
   const newRow = () => {
-    let transition = structuredClone(defaultTransition)
+    const transition = structuredClone(defaultTransition)
     transition.id = counter
     setTransitions([...transitions, transition])
     setCounter(counter + 1)
@@ -48,8 +48,8 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
   }
 
   const transitionUpdate = (event, id, column) => {
-    let index = transitions.findIndex(transition => transition.id === id)
-    let newTransitions = structuredClone(transitions)
+    const index = transitions.findIndex(transition => transition.id === id)
+    const newTransitions = structuredClone(transitions)
     newTransitions[index][column] = event.target.value
     setTransitions(newTransitions)
   }
