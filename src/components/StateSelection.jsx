@@ -1,4 +1,4 @@
-import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, Stack } from "@mui/material";
 
 export default function StateSelection({ states, selections, setSelections, editorIsLocked }) {
   const handleSelectionChange = (value, type) => {
@@ -13,26 +13,24 @@ export default function StateSelection({ states, selections, setSelections, edit
   }
 
   return (
-    <Grid container direction="column">
+    <Stack>
       {Object.keys(selections).map(type => (
-        <Grid item key={type}>
-          <FormControl sx={{ minWidth: "160px", paddingBottom: "20px" }} disabled={editorIsLocked}>
-            <InputLabel>{type}</InputLabel>
-            <Select
-              labelId="demo-simple-select-helper-label"
-              id="demo-simple-select-helper"
-              value={selections[type]}
-              label={type}
-              onChange={event => handleSelectionChange(event.target.value, type)}
-            >
-              <MenuItem value="">None</MenuItem>
-              {states.map(state => (
-                <MenuItem value={state} key={state}>{state}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
+        <FormControl sx={{ minWidth: "160px", paddingBottom: "20px" }} disabled={editorIsLocked} key={type}>
+          <InputLabel>{type}</InputLabel>
+          <Select
+            labelId="demo-simple-select-helper-label"
+            id="demo-simple-select-helper"
+            value={selections[type]}
+            label={type}
+            onChange={event => handleSelectionChange(event.target.value, type)}
+          >
+            <MenuItem value="">None</MenuItem>
+            {states.map(state => (
+              <MenuItem value={state} key={state}>{state}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       ))}
-    </Grid>
+    </Stack>
   )
 }
