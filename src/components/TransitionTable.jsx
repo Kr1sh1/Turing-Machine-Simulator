@@ -29,12 +29,12 @@ const defaultTransition = {
   state: "",
   read: "",
   write: "",
-  move: 0,
+  move: 1,
   nextState: "",
 }
 
 export default function TransitionTable({ transitions, setTransitions, editorIsLocked, activeTransitionID }) {
-  const [counter, setCounter] = useState(1)
+  const [counter, setCounter] = useState(2)
 
   const newRow = () => {
     const transition = structuredClone(defaultTransition)
