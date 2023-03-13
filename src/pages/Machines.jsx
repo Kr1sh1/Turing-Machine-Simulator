@@ -84,6 +84,8 @@ export default function Machines() {
     const id = setTimeout(() => setTicks(ticks + 1) , 1000 / speed)
     tickerID.current = id
     return () => clearTimeout(id)
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turingMachineIsRunning, ticks])
 
   const lockPressed = () => {
