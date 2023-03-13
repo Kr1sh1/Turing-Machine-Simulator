@@ -11,7 +11,6 @@ export default class TuringMachine {
     this.transitions = transitions
     this.oneWayInfiniteTape = oneWayInfiniteTape
 
-    // Configuration (state) of the turing machine
     this.state = this.initial
     this.headPosition = 0
     this.tape = this.oneWayInfiniteTape ?
@@ -60,8 +59,6 @@ export default class TuringMachine {
       default:
         break;
     }
-
-    // return this.getConfiguration()
   }
 
   reset(initialValue) {
