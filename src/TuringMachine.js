@@ -4,7 +4,7 @@ import {immerable} from "immer"
 export default class TuringMachine {
   [immerable] = true
 
-  constructor(selections, transitions, initialValue, oneWayInfiniteTape=true) {
+  constructor(selections, transitions, initialValue, oneWayInfiniteTape) {
     this.initial = selections["Initial State"]
     this.accept = selections["Accepting State"]
     this.reject = selections["Rejecting State"]
@@ -61,9 +61,10 @@ export default class TuringMachine {
     }
   }
 
-  reset(initialValue) {
+  reset(initialValue, oneWayInfiniteTape) {
     this.state = this.initial
     this.headPosition = 0
+    this.oneWayInfiniteTape = oneWayInfiniteTape
     this.tape = this.oneWayInfiniteTape ?
       new OneWayInfiniteTape(initialValue) :
       new TwoWayInfiniteTape(initialValue)

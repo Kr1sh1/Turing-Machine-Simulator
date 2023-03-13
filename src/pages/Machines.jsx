@@ -35,12 +35,11 @@ export default function Machines() {
   const [editorIsLocked, setEditorIsLocked] = useState(false)
   const [activeTransitionID, setActiveTransitionID] = useState(-1)
   const [turingMachineIsRunning, setTuringMachineIsRunning] = useState(false)
-  const [turingMachine, updateTuringMachine] = useImmer(new TuringMachine(selections, transitions, initialValue))
+  const [turingMachine, updateTuringMachine] = useImmer(new TuringMachine(selections, transitions, initialValue, true))
   const tickerID = useRef()
   const [ticks, setTicks] = useState(0)
   const [speed, setSpeed] = useState(1)
-
-  const oneWayInfiniteTape = false
+  const [oneWayInfiniteTape, setOneWayInfiniteTape] = useState(true)
 
   const uniqueStates = new Set(
     transitions.reduce(
@@ -115,7 +114,7 @@ export default function Machines() {
     stopPressed()
     setActiveTransitionID(-1)
     updateTuringMachine(draft => {
-      draft.reset(initialValue)
+      draft.reset(initialValue, oneWayInfiniteTape)
     })
   }
 
@@ -154,6 +153,7 @@ export default function Machines() {
         setInitialValue={setInitialValue}
         setSpeed={setSpeed}
         editorIsLocked={editorIsLocked}
+        setOneWayInfiniteTape={setOneWayInfiniteTape}
         turingMachineIsRunning={turingMachineIsRunning} />
       <Tape
         configuration={turingMachine.getConfiguration()} />
