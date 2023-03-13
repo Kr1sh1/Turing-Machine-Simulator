@@ -40,11 +40,17 @@ export default function Tape({ configuration }) {
         <Paper variant="outlined" square sx={{ minWidth: cellSize, width: cellSize, height: cellSize, visibility: "hidden" }} key={key} />
       ))}
       {tape.map(cell => (
-        <Paper variant="outlined" square sx={{ minWidth: cellSize, width: cellSize, height: cellSize, textAlign: "center", lineHeight: "50px" }} key={cell.key}>{cell.value}</Paper>
+        <div key={cell.key}>
+          {cell.key}
+          <Paper variant="outlined" square sx={{ minWidth: cellSize, width: cellSize, height: cellSize, textAlign: "center", lineHeight: "50px" }}>{cell.value}</Paper>
+        </div>
       ))}
     </>) :
     tape.map(cell => (
-      <Paper variant="outlined" square sx={{ minWidth: cellSize, width: cellSize, height: cellSize, textAlign: "center", lineHeight: "50px" }} key={cell.key}>{cell.value}</Paper>
+      <div key={cell.key}>
+        {cell.key}
+        <Paper variant="outlined" square sx={{ minWidth: cellSize, width: cellSize, height: cellSize, textAlign: "center", lineHeight: "50px" }}>{cell.value}</Paper>
+      </div>
     ))
 
   return (
