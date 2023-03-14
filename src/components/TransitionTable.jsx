@@ -55,7 +55,7 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
   }
 
   return (
-    <Box>
+    <Box sx={{ flexGrow: 1, minWidth: "0" }}>
       <TableContainer>
         <Table>
           <TableHead>

@@ -13,9 +13,9 @@ export default function StateSelection({ states, selections, setSelections, edit
   }
 
   return (
-    <Stack>
+    <Stack spacing={2} minWidth="160px">
       {Object.keys(selections).map(type => (
-        <FormControl sx={{ minWidth: "160px", paddingBottom: "20px" }} disabled={editorIsLocked} key={type}>
+        <FormControl disabled={editorIsLocked} key={type}>
           <InputLabel>{type}</InputLabel>
           <Select
             labelId="demo-simple-select-helper-label"

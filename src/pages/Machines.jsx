@@ -131,7 +131,7 @@ export default function Machines() {
     <>
     <Snackbar />
 
-    <Box>
+    <Box sx={{ display: "flex" }}>
       <StateSelection
         states={states}
         selections={selections}
