@@ -1,13 +1,14 @@
 import { OneWayInfiniteTape, TwoWayInfiniteTape } from "./Tape"
 import {immerable} from "immer"
+import { StateType } from "./Enums"
 
 export default class TuringMachine {
   [immerable] = true
 
   constructor(selections, transitions, initialValue, oneWayInfiniteTape) {
-    this.initial = selections["Initial State"]
-    this.accept = selections["Accepting State"]
-    this.reject = selections["Rejecting State"]
+    this.initial = selections[StateType.INITIAL]
+    this.accept = selections[StateType.ACCEPT]
+    this.reject = selections[StateType.REJECT]
     this.transitions = transitions
     this.oneWayInfiniteTape = oneWayInfiniteTape
 

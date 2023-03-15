@@ -6,6 +6,7 @@ import StateSelection from "../components/StateSelection";
 import TransitionTable from "../components/TransitionTable";
 import Tape from "../components/Tape";
 import { useImmer } from "use-immer";
+import { SimulatorState, StateType } from "../Enums";
 
 export default function Machines() {
   const [initialValue, setInitialValue] = useState("");
@@ -28,13 +29,13 @@ export default function Machines() {
     }
   ])
   const [selections, setSelections] = useState({
-    "Initial State": "",
-    "Accepting State": "",
-    "Rejecting State": "",
+    [StateType.INITIAL]: "",
+    [StateType.ACCEPT]: "",
+    [StateType.REJECT]: "",
   })
   const [editorIsLocked, setEditorIsLocked] = useState(false)
   const [activeTransitionID, setActiveTransitionID] = useState(-1)
-  const [turingMachineIsRunning, setTuringMachineIsRunning] = useState(false)
+  const [simulatorStatus, setSimulatorStatus] = useState(SimulatorState.PAUSED)
   const [turingMachine, updateTuringMachine] = useImmer(new TuringMachine(selections, transitions, initialValue, true))
   const tickerID = useRef()
   const [ticks, setTicks] = useState(0)
@@ -63,12 +64,14 @@ export default function Machines() {
   if (selectionChanged) setSelections(selectionsCopy)
 
   useEffect(() => {
-    if (!turingMachineIsRunning) return
+    if (simulatorStatus !== SimulatorState.RUNNING) return
 
     const availableTransitions = turingMachine.getTransitions()
     switch (availableTransitions.length) {
       case 0:
-        break
+        setSimulatorStatus(SimulatorState.TERMINATED)
+        setActiveTransitionID(-1)
+        return
       case 1:
         setActiveTransitionID(availableTransitions[0].id)
         updateTuringMachine(draft => {
@@ -85,20 +88,21 @@ export default function Machines() {
     return () => clearTimeout(id)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [turingMachineIsRunning, ticks])
+  }, [ticks])
 
   const lockPressed = () => {
     if (editorIsLocked) {
       setEditorIsLocked(!editorIsLocked)
       setActiveTransitionID(-1)
     } else {
-      const initSet = selections["Initial State"] !== ""
-      const halting = [selections["Accepting State"], selections["Rejecting State"]]
+      const initSet = selections[StateType.INITIAL] !== ""
+      const halting = [selections[StateType.ACCEPT], selections[StateType.REJECT]]
       const invalids = transitions.filter(invalidTransition)
       const haltHasExit = transitions.find(transition => halting.includes(transition.state))
       if (initSet && invalids.length === 0 && !haltHasExit) {
         setEditorIsLocked(!editorIsLocked)
         updateTuringMachine(new TuringMachine(selections, transitions, initialValue, oneWayInfiniteTape))
+        setSimulatorStatus(SimulatorState.PAUSED)
       }
     }
   }
@@ -116,14 +120,16 @@ export default function Machines() {
     updateTuringMachine(draft => {
       draft.reset(initialValue, oneWayInfiniteTape)
     })
+    setSimulatorStatus(SimulatorState.PAUSED)
   }
 
   const startPressed = () => {
-    setTuringMachineIsRunning(true)
+    setSimulatorStatus(SimulatorState.RUNNING)
+    setTicks(ticks + 1)
   }
 
   const stopPressed = () => {
-    setTuringMachineIsRunning(false)
+    setSimulatorStatus(SimulatorState.PAUSED)
     clearTimeout(tickerID)
   }
 
@@ -154,7 +160,7 @@ export default function Machines() {
         setSpeed={setSpeed}
         editorIsLocked={editorIsLocked}
         setOneWayInfiniteTape={setOneWayInfiniteTape}
-        turingMachineIsRunning={turingMachineIsRunning} />
+        simulatorStatus={simulatorStatus} />
       <Tape
         configuration={turingMachine.getConfiguration()} />
     </Box>
