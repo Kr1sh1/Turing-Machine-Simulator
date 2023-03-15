@@ -8,6 +8,7 @@ import Tape from "../components/Tape";
 import { useImmer } from "use-immer";
 import { SimulatorState, StateType } from "../Enums";
 import Status from "../components/Status";
+import ComputationTree from "../components/ComputationTree";
 
 export default function Machines() {
   const [initialValue, setInitialValue] = useState("");
@@ -166,6 +167,7 @@ export default function Machines() {
         configuration={turingMachine.getConfiguration()} />
     </Box>
     <Status simulatorStatus={simulatorStatus} currentState={turingMachine.state} selections={selections} />
+    <ComputationTree />
     </>
   )
 }
