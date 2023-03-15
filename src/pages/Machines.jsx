@@ -7,6 +7,7 @@ import TransitionTable from "../components/TransitionTable";
 import Tape from "../components/Tape";
 import { useImmer } from "use-immer";
 import { SimulatorState, StateType } from "../Enums";
+import Status from "../components/Status";
 
 export default function Machines() {
   const [initialValue, setInitialValue] = useState("");
@@ -164,6 +165,7 @@ export default function Machines() {
       <Tape
         configuration={turingMachine.getConfiguration()} />
     </Box>
+    <Status simulatorStatus={simulatorStatus} currentState={turingMachine.state} selections={selections} />
     </>
   )
 }
