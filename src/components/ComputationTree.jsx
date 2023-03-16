@@ -1,41 +1,83 @@
-import { Box } from "@mui/material";
-import { ReactFlow } from "reactflow";
-
+import { memo } from 'react';
+import ReactFlow, { ConnectionLineType, Controls, useReactFlow } from 'reactflow';
+import dagre from 'dagre';
 import 'reactflow/dist/style.css';
+import { SimulatorState } from '../Enums';
 
-const nodes = [
-  {
-    id: "0",
-    position: { x: 0, y: 0 },
-    data: { label: "Node 0" },
-    draggable: false,
-    deletable: false,
-    type: "input",
-    sourcePosition: "right",
-  },
-  {
-    id: "1",
-    position: { x: 300, y: 0 },
-    data: { label: "Node 1" },
-    draggable: false,
-    deletable: false,
-    sourcePosition: "right",
-    targetPosition: "left",
-    selected: true,
-  },
-]
+/*
+The following code was reused from an example given here
+https://reactflow.dev/docs/examples/layout/dagre/
+*/
 
-const edges = [
-  { id: '1-2', source: '0', target: '1' }
-];
+const nodeWidth = 150
+const nodeHeight = 20
 
-export default function ComputationTree() {
+const getLayoutedElements = (nodes, edges) => {
+  const dagreGraph = new dagre.graphlib.Graph();
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+  dagreGraph.setGraph({ rankdir: "LR" });
+
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+  });
+
+  edges.forEach((edge) => {
+    dagreGraph.setEdge(edge.source, edge.target);
+  });
+
+  dagre.layout(dagreGraph);
+
+  nodes.forEach((node) => {
+    const nodeWithPosition = dagreGraph.node(node.id);
+
+    node.position = {
+      x: nodeWithPosition.x - nodeWidth / 2,
+      y: nodeWithPosition.y - nodeHeight / 2,
+    };
+
+    return node;
+  });
+
+  return { nodes, edges };
+};
+
+export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId, simulatorStatus, nodeClicked }) {
+  const { setCenter } = useReactFlow()
+
+  const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+    rawNodes,
+    rawEdges
+  );
+
+  const activeNode = layoutedNodes.find(node => node.id === activeNodeId)
+
+  const x = activeNode.position.x + nodeWidth / 2;
+  const y = activeNode.position.y + nodeHeight / 2;
+  setCenter(x, y, { duration: 250, zoom: 1.5 })
+
+  const simulatorIsNotRunning = simulatorStatus !== SimulatorState.RUNNING
+
   return (
-    <Box sx={{ width: "100vh", height: "100px" }}>
+    <div className="layoutflow" style={{ width: "100%", height: "200px" }}>
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        proOptions={{ hideAttribution: true }} />
-    </Box>
-  )
-}
+        nodes={layoutedNodes}
+        edges={layoutedEdges}
+        connectionLineType={ConnectionLineType.SmoothStep}
+        onNodeClick={nodeClicked}
+
+        nodesDraggable={false}
+        nodesFocusable={simulatorIsNotRunning}
+        edgesFocusable={false}
+        nodesConnectable={false}
+        elementsSelectable={simulatorIsNotRunning}
+        panOnDrag={simulatorIsNotRunning}
+        zoomOnScroll={simulatorIsNotRunning}
+        zoomOnDoubleClick={simulatorIsNotRunning}
+        zoomOnPinch={simulatorIsNotRunning}
+      >
+        <Controls showInteractive={false} showFitView={simulatorIsNotRunning} />
+      </ReactFlow>
+    </div>
+  );
+})
