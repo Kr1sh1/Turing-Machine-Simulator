@@ -1,5 +1,5 @@
 import { Box, Snackbar } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import MachineControls from "../components/MachineControls";
 import TuringMachine from "../TuringMachine"
 import StateSelection from "../components/StateSelection";
@@ -9,6 +9,27 @@ import { useImmer } from "use-immer";
 import { SimulatorState, StateType } from "../Enums";
 import Status from "../components/Status";
 import ComputationTree from "../components/ComputationTree";
+import { ReactFlowProvider } from "reactflow";
+
+const makeNode = (id, label) => {
+  return {
+    id: `${id}`,
+    position: { x: 0, y: 0 },
+    data: { label: label },
+    deletable: false,
+    sourcePosition: "right",
+    targetPosition: "left",
+  }
+}
+
+const makeEdge = (id, source, target) => {
+  return {
+    id: `${id}`,
+    source: `${source}`,
+    target: `${target}`,
+    animated: true,
+  }
+}
 
 export default function Machines() {
   const [initialValue, setInitialValue] = useState("");
@@ -43,6 +64,10 @@ export default function Machines() {
   const [ticks, setTicks] = useState(0)
   const [speed, setSpeed] = useState(1)
   const [oneWayInfiniteTape, setOneWayInfiniteTape] = useState(true)
+  const [nodes, setNodes] = useState([])
+  const [edges, setEdges] = useState([])
+  const [counter, setCounter] = useState(0)
+  const [activeNodeId, setActiveNodeId] = useState({})
 
   const uniqueStates = new Set(
     transitions.reduce(
@@ -79,6 +104,11 @@ export default function Machines() {
         updateTuringMachine(draft => {
           draft.performTransition(availableTransitions[0].id)
         })
+        const newNode = makeNode(counter, "Not First Node")
+        setNodes([...nodes, newNode])
+        setCounter(count => count + 1)
+        setEdges([...edges, makeEdge(counter, activeNodeId, newNode.id)])
+        setActiveNodeId(newNode.id)
         break
       default:
         console.log("caseDefault")
@@ -105,6 +135,11 @@ export default function Machines() {
         setEditorIsLocked(!editorIsLocked)
         updateTuringMachine(new TuringMachine(selections, transitions, initialValue, oneWayInfiniteTape))
         setSimulatorStatus(SimulatorState.PAUSED)
+        const newNode = {...makeNode(counter, "First Node"), type: "input"}
+        setNodes([newNode])
+        setActiveNodeId(newNode.id)
+        setCounter(count => count + 1)
+        setEdges([])
       }
     }
   }
@@ -116,13 +151,20 @@ export default function Machines() {
     )
   }
 
+  // TODO: Reset Turing machine state to the one at this node
+  const nodeClicked = useCallback((event, node) => {}, [])
+
   const resetPressed = () => {
     stopPressed()
     setActiveTransitionID(-1)
     updateTuringMachine(draft => {
       draft.reset(initialValue, oneWayInfiniteTape)
     })
-    setSimulatorStatus(SimulatorState.PAUSED)
+    const newNode = {...makeNode(counter, "First Node"), type: "input"}
+    setNodes([newNode])
+    setActiveNodeId(newNode.id)
+    setCounter(count => count + 1)
+    setEdges([])
   }
 
   const startPressed = () => {
@@ -167,7 +209,11 @@ export default function Machines() {
         configuration={turingMachine.getConfiguration()} />
     </Box>
     <Status simulatorStatus={simulatorStatus} currentState={turingMachine.state} selections={selections} />
-    <ComputationTree />
+    {editorIsLocked &&
+      <ReactFlowProvider>
+        <ComputationTree rawNodes={nodes} rawEdges={edges} activeNodeId={activeNodeId} simulatorStatus={simulatorStatus} nodeClicked={nodeClicked} />
+      </ReactFlowProvider>
+    }
     </>
   )
 }
