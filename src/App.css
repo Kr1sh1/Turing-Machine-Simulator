@@ -1,0 +1,15 @@
+.rejectNode {
+  background-color: red;
+}
+
+.acceptNode {
+  background-color: greenyellow;
+}
+
+.haltNode {
+  background-color: blue;
+}
+
+.nondetNode {
+  background-color: orange;
+}

@@ -8,7 +8,7 @@ export default function Status({ simulatorStatus, currentState, selections }) {
   if (simulatorStatus === SimulatorState.TERMINATED) {
     switch (currentState) {
       case selections[StateType.ACCEPT]:
-        color = "green"
+        color = "greenyellow"
         subtext = "Input Accepted"
         break;
 

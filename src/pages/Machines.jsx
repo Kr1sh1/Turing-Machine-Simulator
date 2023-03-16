@@ -93,10 +93,28 @@ export default function Machines() {
   useEffect(() => {
     if (simulatorStatus !== SimulatorState.RUNNING) return
 
+    const changeActiveNodeClass = (className) => {
+      setNodes(nodes =>
+        nodes.map(node => {
+          if (node.id === activeNodeId) {
+            node.className = className
+          }
+          return node
+        })
+      )
+    }
+
     const availableTransitions = turingMachine.getTransitions()
     switch (availableTransitions.length) {
       case 0:
         setSimulatorStatus(SimulatorState.TERMINATED)
+        let className = ""
+        if (turingMachine.state === selections[StateType.ACCEPT]) className = "acceptNode"
+        else if (turingMachine.state === selections[StateType.HALT]) className = "haltNode"
+        else className = "rejectNode"
+
+        changeActiveNodeClass(className)
+
         setActiveTransitionID(-1)
         return
       case 1:
@@ -111,7 +129,7 @@ export default function Machines() {
         setActiveNodeId(newNode.id)
         break
       default:
-        console.log("caseDefault")
+        changeActiveNodeClass("nondetNode")
         break
     }
 
