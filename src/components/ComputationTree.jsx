@@ -1,54 +1,46 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import ReactFlow, { ConnectionLineType, Controls, useReactFlow } from 'reactflow';
 import dagre from 'dagre';
 import 'reactflow/dist/style.css';
 import { SimulatorState } from '../Enums';
 
-/*
-The following code was reused from an example given here
-https://reactflow.dev/docs/examples/layout/dagre/
-*/
-
 const nodeWidth = 150
 const nodeHeight = 20
-
-const getLayoutedElements = (nodes, edges) => {
-  const dagreGraph = new dagre.graphlib.Graph();
-  dagreGraph.setDefaultEdgeLabel(() => ({}));
-
-  dagreGraph.setGraph({ rankdir: "LR" });
-
-  nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
-  });
-
-  edges.forEach((edge) => {
-    dagreGraph.setEdge(edge.source, edge.target);
-  });
-
-  dagre.layout(dagreGraph);
-
-  nodes.forEach((node) => {
-    const nodeWithPosition = dagreGraph.node(node.id);
-
-    node.position = {
-      x: nodeWithPosition.x - nodeWidth / 2,
-      y: nodeWithPosition.y - nodeHeight / 2,
-    };
-
-    return node;
-  });
-
-  return { nodes, edges };
-};
 
 export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId, simulatorStatus, nodeClicked }) {
   const { setCenter } = useReactFlow()
 
-  const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-    rawNodes,
-    rawEdges
-  );
+  /*
+  The following function was adapted from an example given here
+  https://reactflow.dev/docs/examples/layout/dagre/
+  */
+  const layoutedNodes = useMemo(() => {
+    const dagreGraph = new dagre.graphlib.Graph();
+    dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+    dagreGraph.setGraph({ rankdir: "LR" });
+
+    rawNodes.forEach((node) => {
+      dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+    });
+
+    rawEdges.forEach((edge) => {
+      dagreGraph.setEdge(edge.source, edge.target);
+    });
+
+    dagre.layout(dagreGraph);
+
+    return rawNodes.map((node) => {
+      const nodeWithPosition = dagreGraph.node(node.id);
+
+      node.position = {
+        x: nodeWithPosition.x - nodeWidth / 2,
+        y: nodeWithPosition.y - nodeHeight / 2,
+      };
+
+      return node;
+    });
+  }, [rawEdges, rawNodes])
 
   const activeNode = layoutedNodes.find(node => node.id === activeNodeId)
 
@@ -62,7 +54,7 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
     <div className="layoutflow" style={{ width: "100%", height: "200px" }}>
       <ReactFlow
         nodes={layoutedNodes}
-        edges={layoutedEdges}
+        edges={rawEdges}
         connectionLineType={ConnectionLineType.SmoothStep}
         onNodeClick={nodeClicked}
 

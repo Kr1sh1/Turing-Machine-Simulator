@@ -2,9 +2,8 @@ import { useAutoAnimate } from '@formkit/auto-animate/react'
 import NavigationIcon from '@mui/icons-material/Navigation'
 import { Box, Paper } from '@mui/material'
 import { useLayoutEffect, useRef, useState } from 'react'
-import { OneWayInfiniteTape } from '../Tape'
 
-export default function Tape({ configuration }) {
+export default function Tape({ configuration, getCenteredSlice }) {
   const [parent] = useAutoAnimate( {
     duration: 250
   } )
@@ -27,14 +26,14 @@ export default function Tape({ configuration }) {
     return () => observer.disconnect()
   }, [])
 
-  const tape = configuration.tape.getCenteredSlice(numCells, configuration.headPosition)
+  const tape = getCenteredSlice(numCells, configuration.headPosition)
 
   const emptyCells = []
   for (let index = numCells - tape.length; index > 0 ; index--) {
     emptyCells.push(-index)
   }
 
-  const cells = configuration.tape instanceof OneWayInfiniteTape ?
+  const cells = !configuration.tape.backwardTape ?
     (<>
       {emptyCells.map((key) => (
         <Paper variant="outlined" square sx={{ minWidth: cellSize, width: cellSize, height: cellSize, visibility: "hidden" }} key={key} />
