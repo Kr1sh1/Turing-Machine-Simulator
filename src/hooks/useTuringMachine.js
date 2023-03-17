@@ -50,11 +50,21 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
     setTape(configuration.tape)
   }, [setTape])
 
+  const reset = useCallback((initialValue) => {
+    setTape({
+      forwardTape: [...initialValue],
+      backwardTape: oneWayInfiniteTape ? null : []
+    })
+    setHeadPosition(0)
+    setState(selections[StateType.INITIAL])
+  }, [setTape, oneWayInfiniteTape, selections])
+
   return [
     getCenteredSlice,
     getConfiguration,
     setConfiguration,
     performTransition,
-    getTransitions
+    getTransitions,
+    reset,
   ]
 }
