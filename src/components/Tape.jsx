@@ -1,9 +1,9 @@
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import NavigationIcon from '@mui/icons-material/Navigation'
 import { Box, Paper } from '@mui/material'
-import { useLayoutEffect, useRef, useState } from 'react'
+import { memo, useLayoutEffect, useRef, useState } from 'react'
 
-export default function Tape({ configuration, getCenteredSlice }) {
+export default memo(function Tape({ configuration, getCenteredSlice }) {
   const [parent] = useAutoAnimate( {
     duration: 250
   } )
@@ -62,4 +62,4 @@ export default function Tape({ configuration, getCenteredSlice }) {
       <NavigationIcon />
     </Box>
   )
-}
+})
