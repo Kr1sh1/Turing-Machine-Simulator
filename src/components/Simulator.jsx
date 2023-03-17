@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { ReactFlowProvider } from "reactflow";
+import { getIncomers, getOutgoers, ReactFlowProvider } from "reactflow";
 import ComputationTree from "./ComputationTree";
 import MachineControls from "./MachineControls";
 import Status from "./Status";
@@ -43,7 +43,6 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
   const [
     getCenteredSlice,
     getConfiguration,
-    setConfiguration,
     performTransition,
     getTransitions,
     reset,
@@ -79,11 +78,18 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
       case 1:
         setActiveTransitionID(availableTransitions[0].id)
         performTransition(availableTransitions[0].id)
-        const newNode = makeNode(counter, "Not First Node")
-        setNodes([...nodes, newNode])
-        setCounter(count => count + 1)
-        setEdges([...edges, makeEdge(counter, activeNodeId, newNode.id)])
-        setActiveNodeId(newNode.id)
+        const children = getChildren()
+        let nextNodeId = undefined
+        if (children.length === 0) {
+          const newNode = makeNode(counter, "Not First Node")
+          nextNodeId = newNode.id
+          setNodes([...nodes, {...newNode, data: {...newNode.data, transitionId: availableTransitions[0].id}}])
+          setCounter(count => count + 1)
+          setEdges([...edges, makeEdge(counter, activeNodeId, newNode.id)])
+        } else {
+          nextNodeId = children[0].id
+        }
+        setActiveNodeId(nextNodeId)
         break
       default:
         changeActiveNodeClass("nondetNode")
@@ -97,20 +103,52 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticks])
 
+  const getChildren = () => {
+    const currentNode = nodes.find((node) => node.id === activeNodeId)
+    return getOutgoers(currentNode, nodes, edges)
+  }
+
+  const buildTransitionSequence = useCallback((node) => {
+    const ids = []
+    let parent = getIncomers(node, nodes, edges)
+    while (parent.length === 1) {
+      ids.push(node.data.transitionId)
+      node = parent[0]
+      parent = getIncomers(parent[0], nodes, edges)
+    }
+    return ids
+  }, [nodes, edges])
+
   const transitionSelected = (id) => {
     setAvailableTransitions([])
     setActiveTransitionID(id)
     performTransition(id)
-    const newNode = makeNode(counter, "Not First Node")
-    setNodes([...nodes, newNode])
-    setCounter(count => count + 1)
-    setEdges([...edges, makeEdge(counter, activeNodeId, newNode.id)])
-    setActiveNodeId(newNode.id)
+    const child = getChildren().find(node => node.data.transitionId === id)
+    let nextNodeId = undefined
+    if (!child) {
+      const newNode = makeNode(counter, "Not First Node")
+      nextNodeId = newNode.id
+      setNodes([...nodes, {...newNode, data: {...newNode.data, transitionId: id}}])
+      setCounter(count => count + 1)
+      setEdges([...edges, makeEdge(counter, activeNodeId, newNode.id)])
+    } else {
+      nextNodeId = child.id
+    }
+    setActiveNodeId(nextNodeId)
     tickerID.current = setTimeout(() => setTicks(ticks + 1) , 1000 / speed)
   }
 
-  // TODO: Reset Turing machine state to the one at this node
-  const nodeClicked = useCallback((event, node) => {}, [])
+  const nodeClicked = useCallback((event, node) => {
+    if (simulatorStatus === SimulatorState.RUNNING) return
+    setActiveNodeId(node.id)
+    setActiveTransitionID(node.data.transitionId)
+    setSimulatorStatus(SimulatorState.PAUSED)
+    const transitionSequence = buildTransitionSequence(node)
+    reset()
+    for (let index = transitionSequence.length - 1; index >= 0; index--) {
+      performTransition(transitionSequence[index])
+    }
+  }, [buildTransitionSequence, simulatorStatus, setActiveTransitionID, reset, performTransition])
 
   const resetPressed = () => {
     stopPressed()
