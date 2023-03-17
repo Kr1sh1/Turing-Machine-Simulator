@@ -4,7 +4,7 @@ import useTape from "./useTape"
 
 export default function useTuringMachine(selections, transitions, oneWayInfiniteTape) {
   const [state, setState] = useState(selections[StateType.INITIAL])
-  const [headPosition, setHeadPosition] = useState()
+  const [headPosition, setHeadPosition] = useState(0)
   const [getCenteredSlice, readCell, writeCell, setTape, getTape] = useTape(oneWayInfiniteTape)
 
   const getTransitions = useCallback(() => {
