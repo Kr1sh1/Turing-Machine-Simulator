@@ -14,7 +14,7 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
   The following function was adapted from an example given here
   https://reactflow.dev/docs/examples/layout/dagre/
   */
-  const layoutedNodes = useMemo(() => {
+  let layoutedNodes = useMemo(() => {
     const dagreGraph = new dagre.graphlib.Graph();
     dagreGraph.setDefaultEdgeLabel(() => ({}));
 
@@ -42,11 +42,17 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
     });
   }, [rawEdges, rawNodes])
 
-  const activeNode = layoutedNodes.find(node => node.id === activeNodeId)
+  const activeNodeIndex = layoutedNodes.findIndex(node => node.id === activeNodeId)
 
-  const x = activeNode.position.x + nodeWidth / 2;
-  const y = activeNode.position.y + nodeHeight / 2;
-  setCenter(x, y, { duration: 250, zoom: 1.5 })
+  layoutedNodes = layoutedNodes.map(node => {
+    node.selected = false
+    return node
+  })
+  layoutedNodes[activeNodeIndex].selected = true
+
+  const x = layoutedNodes[activeNodeIndex].position.x + nodeWidth / 2;
+  const y = layoutedNodes[activeNodeIndex].position.y + nodeHeight / 2;
+  setCenter(x, y, { duration: 250, zoom: 1.25 })
 
   const simulatorIsNotRunning = simulatorStatus !== SimulatorState.RUNNING
 
@@ -59,6 +65,7 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
         edges={rawEdges}
         connectionLineType={ConnectionLineType.SmoothStep}
         onNodeClick={nodeClicked}
+        // onlyRenderVisibleElements={true}
 
         nodesDraggable={false}
         nodesFocusable={simulatorIsNotRunning}
@@ -67,7 +74,7 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
         elementsSelectable={simulatorIsNotRunning}
         panOnDrag={simulatorIsNotRunning}
         zoomOnScroll={simulatorIsNotRunning}
-        zoomOnDoubleClick={simulatorIsNotRunning}
+        zoomOnDoubleClick={false}
         zoomOnPinch={simulatorIsNotRunning}
       >
         <Controls showInteractive={false} showFitView={simulatorIsNotRunning} />
