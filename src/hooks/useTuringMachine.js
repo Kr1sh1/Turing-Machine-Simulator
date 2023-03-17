@@ -6,6 +6,7 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
   const [state, setState] = useState(selections[StateType.INITIAL])
   const [headPosition, setHeadPosition] = useState(0)
   const [getCenteredSlice, readCell, writeCell, setTape, getTape] = useTape(oneWayInfiniteTape)
+  const [lastInitialValue, setLastInitialValue] = useState("")
 
   const getTransitions = useCallback(() => {
     return transitions.filter(transition =>
@@ -48,14 +49,15 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
     setTape(configuration.tape)
   }, [setTape])
 
-  const reset = useCallback((initialValue) => {
+  const reset = useCallback((initialValue = lastInitialValue) => {
     setTape({
       forwardTape: [...initialValue],
       backwardTape: oneWayInfiniteTape ? null : []
     })
     setHeadPosition(0)
     setState(selections[StateType.INITIAL])
-  }, [setTape, oneWayInfiniteTape, selections])
+    if (initialValue !== lastInitialValue) setLastInitialValue(initialValue)
+  }, [setTape, oneWayInfiniteTape, selections, lastInitialValue])
 
   return [
     getCenteredSlice,
