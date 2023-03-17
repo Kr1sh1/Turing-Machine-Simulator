@@ -15,9 +15,9 @@ export default function useTape(oneWayInfiniteTape) {
       if (-(readIndex + 1) >= backwardTape.current.length) return ""
       return backwardTape.current[-(readIndex + 1)]
     }
-    if (readIndex >= forwardTape.current.length) return ""
-    return forwardTape.current[readIndex]
-  }, [])
+
+    return oneWayTapeReadCell(readIndex)
+  }, [oneWayTapeReadCell])
 
   const readCell = useCallback((readIndex) => {
     if (oneWayInfiniteTape) {
@@ -28,40 +28,24 @@ export default function useTape(oneWayInfiniteTape) {
   }, [oneWayTapeReadCell, twoWayTapeReadCell, oneWayInfiniteTape])
 
   const oneWayTapeWriteCell = useCallback((writeIndex, value) => {
-    if (writeIndex === forwardTape.current.length) {
-      forwardTape.current.push(value)
-      return
-    }
-    else if (writeIndex > forwardTape.current.length) throw new Error("Invalid Write: Must write linearly")
     if (writeIndex < 0) throw new Error("Invalid Write: Negative indices are invalid for one-way infinite tape")
+    if (writeIndex > forwardTape.current.length) throw new Error("Invalid Write: Must write linearly")
 
-    forwardTape.current = forwardTape.current.map((oldValue, index) => {
-      if (index === writeIndex) return value
-      return oldValue
-    })
+    if (writeIndex === forwardTape.current.length) forwardTape.current.push(value)
+    else forwardTape.current[writeIndex] = value
   }, [])
 
   const twoWayTapeWriteCell = useCallback((writeIndex, value) => {
     if (writeIndex < 0) {
-      if (-(writeIndex + 1) === backwardTape.current.length) {
-        backwardTape.current.push(value)
-        return
-      }
-      if (-(writeIndex + 1) > backwardTape.current.length) throw new Error("Invalid write index. Must write linearly")
-      backwardTape.current[-(writeIndex + 1)] = value
-      return
-    }
-    if (writeIndex > forwardTape.current.length) throw new Error("Invalid write index. Must write linearly")
-    if (writeIndex === forwardTape.current.length) {
-      forwardTape.current.push(value)
+      if (-(writeIndex + 1) > backwardTape.current.length) throw new Error("Invalid Write: Must write linearly")
+
+      if (-(writeIndex + 1) === backwardTape.current.length) backwardTape.current.push(value)
+      else backwardTape.current[-(writeIndex + 1)] = value
       return
     }
 
-    forwardTape.current = forwardTape.current.map((oldValue, index) => {
-      if (index === writeIndex) return value
-      return oldValue
-    })
-  }, [])
+    oneWayTapeWriteCell(writeIndex, value)
+  }, [oneWayTapeWriteCell])
 
   const writeCell = useCallback((index, value) => {
     if (oneWayInfiniteTape) {
