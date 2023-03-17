@@ -43,11 +43,13 @@ export default function useTape(oneWayInfiniteTape) {
 
   const twoWayTapeWriteCell = useCallback((writeIndex, value) => {
     if (writeIndex < 0) {
-      if (-(writeIndex + 1) === backwardTape.length) {
+      if (-(writeIndex + 1) === backwardTape.current.length) {
         backwardTape.current.push(value)
         return
       }
       if (-(writeIndex + 1) > backwardTape.current.length) throw new Error("Invalid write index. Must write linearly")
+      backwardTape.current[-(writeIndex + 1)] = value
+      return
     }
     if (writeIndex > forwardTape.current.length) throw new Error("Invalid write index. Must write linearly")
     if (writeIndex === forwardTape.current.length) {
