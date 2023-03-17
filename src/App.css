@@ -13,3 +13,8 @@
 .nondetNode {
   background-color: orange;
 }
+
+.react-flow__node.selected {
+  border-color: slateblue;
+  border-inline-width: medium;
+}
