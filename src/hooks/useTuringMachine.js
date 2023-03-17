@@ -24,12 +24,10 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
 
     switch (transition.move) {
       case 0:
-        if (!oneWayInfiniteTape || headPosition !== 0) {
-          setHeadPosition(headPosition - 1)
-        }
+        if (!oneWayInfiniteTape || headPosition !== 0) setHeadPosition(head => head - 1)
         break
       case 1:
-        setHeadPosition(headPosition + 1)
+        setHeadPosition(head => head + 1)
         break
       default:
         break;

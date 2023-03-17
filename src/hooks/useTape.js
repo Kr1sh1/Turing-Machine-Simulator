@@ -20,16 +20,16 @@ export default function useTape(oneWayInfiniteTape) {
   }, [forwardTape, backwardTape])
 
   const readCell = useCallback((readIndex) => {
-    if (!backwardTape) {
+    if (oneWayInfiniteTape) {
       return oneWayTapeReadCell(readIndex)
     } else {
       return twoWayTapeReadCell(readIndex)
     }
-  }, [oneWayTapeReadCell, twoWayTapeReadCell, backwardTape])
+  }, [oneWayTapeReadCell, twoWayTapeReadCell, oneWayInfiniteTape])
 
   const oneWayTapeWriteCell = useCallback((writeIndex, value) => {
     if (writeIndex === forwardTape.length) {
-      setForwardTape([...forwardTape, value])
+      setForwardTape(tape => [...tape, value])
       return
     }
     else if (writeIndex > forwardTape.length) throw new Error("Invalid Write: Must write linearly")
@@ -45,14 +45,14 @@ export default function useTape(oneWayInfiniteTape) {
   const twoWayTapeWriteCell = useCallback((writeIndex, value) => {
     if (writeIndex < 0) {
       if (-(writeIndex + 1) === backwardTape.length) {
-        setBackwardTape([...backwardTape, value])
+        setBackwardTape(tape => [...tape, value])
         return
       }
       if (-(writeIndex + 1) > backwardTape.length) throw new Error("Invalid write index. Must write linearly")
     }
     if (writeIndex > forwardTape.length) throw new Error("Invalid write index. Must write linearly")
     if (writeIndex === forwardTape.length) {
-      setForwardTape([...forwardTape, value])
+      setForwardTape(tape => [...tape, value])
       return
     }
     setForwardTape(tape =>
@@ -64,12 +64,12 @@ export default function useTape(oneWayInfiniteTape) {
   }, [backwardTape, forwardTape])
 
   const writeCell = useCallback((index, value) => {
-    if (!backwardTape) {
+    if (oneWayInfiniteTape) {
       oneWayTapeWriteCell(index, value)
     } else {
       twoWayTapeWriteCell(index, value)
     }
-  }, [oneWayTapeWriteCell, twoWayTapeWriteCell, backwardTape])
+  }, [oneWayTapeWriteCell, twoWayTapeWriteCell, oneWayInfiniteTape])
 
   const oneWayTapeCenterSlice = useCallback((numberOfElements, headPosition) => {
     const numberOfElementsOnRightSide = Math.floor(numberOfElements / 2)
@@ -96,12 +96,12 @@ export default function useTape(oneWayInfiniteTape) {
   }, [readCell])
 
   const getCenteredSlice = useCallback((numberOfElements, headPosition) => {
-    if (!backwardTape) {
+    if (oneWayInfiniteTape) {
       return oneWayTapeCenterSlice(numberOfElements, headPosition)
     } else {
       return twoWayTapeCenterSlice(numberOfElements, headPosition)
     }
-  }, [oneWayTapeCenterSlice, twoWayTapeCenterSlice, backwardTape])
+  }, [oneWayTapeCenterSlice, twoWayTapeCenterSlice, oneWayInfiniteTape])
 
   const setTape = useCallback((tape) => {
     setForwardTape(tape.forwardTape)
