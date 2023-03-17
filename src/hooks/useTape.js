@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-export default function useTape(initialValue, oneWayInfiniteTape) {
+export default function useTape(oneWayInfiniteTape) {
   const [forwardTape, setForwardTape] = useState([])
   const [backwardTape, setBackwardTape] = useState(oneWayInfiniteTape ? null : [])
 
@@ -115,5 +115,11 @@ export default function useTape(initialValue, oneWayInfiniteTape) {
     }
   }, [forwardTape, backwardTape])
 
-  return [getCenteredSlice, readCell, writeCell, setTape, getTape]
+  return [
+    getCenteredSlice,
+    readCell,
+    writeCell,
+    setTape,
+    getTape
+  ]
 }
