@@ -53,6 +53,8 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
   return (
     <div className="layoutflow" style={{ width: "100%", height: "200px" }}>
       <ReactFlow
+        proOptions={{ hideAttribution: true }}
+
         nodes={layoutedNodes}
         edges={rawEdges}
         connectionLineType={ConnectionLineType.SmoothStep}
