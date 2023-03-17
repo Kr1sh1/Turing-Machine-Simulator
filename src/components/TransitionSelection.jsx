@@ -5,7 +5,7 @@ export default function TransitionSelection({ availableTransitions, transitionSe
     <Stack spacing={1}>
       Available Transitions
       {availableTransitions.map((transition) => (
-        <Button variant="contained" onClick={() => transitionSelected(transition.id)}>{transition.write} {transition.move} {transition.nextState}</Button>
+        <Button key={transition.id} variant="contained" onClick={() => transitionSelected(transition.id)}>{transition.write} {transition.move} {transition.nextState}</Button>
       ))}
     </Stack>
   )
