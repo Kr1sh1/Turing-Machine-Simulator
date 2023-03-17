@@ -35,11 +35,11 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
   }, [getTransitions, headPosition, writeCell, oneWayInfiniteTape])
 
   const getConfiguration = useCallback(() => {
-    return {
+    return structuredClone({
       state,
       headPosition,
       tape: getTape()
-    }
+    })
   }, [state, headPosition, getTape])
 
   const setConfiguration = useCallback((configuration) => {
