@@ -1,68 +1,61 @@
-import { useCallback, useState } from "react"
+import { useCallback, useRef } from "react"
 import { StateType } from "../Enums"
 import useTape from "./useTape"
 
 export default function useTuringMachine(selections, transitions, oneWayInfiniteTape) {
-  const [state, setState] = useState(selections[StateType.INITIAL])
-  const [headPosition, setHeadPosition] = useState(0)
+  const state = useRef(selections[StateType.INITIAL])
+  const headPosition = useRef(0)
   const [getCenteredSlice, readCell, writeCell, setTape, getTape] = useTape(oneWayInfiniteTape)
-  const [lastInitialValue, setLastInitialValue] = useState("")
+  const lastInitialValue = useRef("")
 
   const getTransitions = useCallback(() => {
     return transitions.filter(transition =>
-      transition.state === state &&
-      transition.read === readCell(headPosition)
+      transition.state === state.current &&
+      transition.read === readCell(headPosition.current)
     )
-  }, [transitions, state, readCell, headPosition])
+  }, [transitions, readCell])
 
   const performTransition = useCallback((transitionId) => {
     const transition = getTransitions().find(
       transition => transition.id === transitionId
     )
 
-    writeCell(headPosition, transition.write)
-    setState(transition.nextState)
+    writeCell(headPosition.current, transition.write)
+    state.current = transition.nextState
 
     switch (transition.move) {
       case 0:
-        if (!oneWayInfiniteTape || headPosition !== 0) setHeadPosition(head => head - 1)
+        if (!oneWayInfiniteTape || headPosition.current !== 0) headPosition.current -= 1
         break
       case 1:
-        setHeadPosition(head => head + 1)
+        headPosition.current += 1
         break
       default:
         break;
     }
-  }, [getTransitions, headPosition, writeCell, oneWayInfiniteTape])
+  }, [getTransitions, writeCell, oneWayInfiniteTape])
 
   const getConfiguration = useCallback(() => {
     return structuredClone({
-      state,
-      headPosition,
+      state: state.current,
+      headPosition: headPosition.current,
       tape: getTape()
     })
-  }, [state, headPosition, getTape])
+  }, [getTape])
 
-  const setConfiguration = useCallback((configuration) => {
-    setState(configuration.state)
-    setHeadPosition(configuration.headPosition)
-    setTape(configuration.tape)
-  }, [setTape])
-
-  const reset = useCallback((initialValue = lastInitialValue) => {
+  const reset = useCallback((initialValue = lastInitialValue.current) => {
     setTape({
       forwardTape: [...initialValue],
       backwardTape: oneWayInfiniteTape ? null : []
     })
-    setHeadPosition(0)
-    setState(selections[StateType.INITIAL])
-    if (initialValue !== lastInitialValue) setLastInitialValue(initialValue)
-  }, [setTape, oneWayInfiniteTape, selections, lastInitialValue])
+    headPosition.current = 0
+    state.current = selections[StateType.INITIAL]
+    lastInitialValue.current = initialValue
+  }, [setTape, oneWayInfiniteTape, selections])
 
   return [
     getCenteredSlice,
     getConfiguration,
-    setConfiguration,
     performTransition,
     getTransitions,
     reset,

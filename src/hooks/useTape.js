@@ -1,23 +1,23 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef } from "react";
 
 export default function useTape(oneWayInfiniteTape) {
-  const [forwardTape, setForwardTape] = useState([])
-  const [backwardTape, setBackwardTape] = useState(oneWayInfiniteTape ? null : [])
+  const forwardTape = useRef([])
+  const backwardTape = useRef(oneWayInfiniteTape ? null : [])
 
   const oneWayTapeReadCell = useCallback((readIndex) => {
     if (readIndex < 0) throw new Error("Invalid Read: Negative indices are invalid for one-way infinite tape")
-    if (readIndex >= forwardTape.length) return ""
-    return forwardTape[readIndex]
-  }, [forwardTape])
+    if (readIndex >= forwardTape.current.length) return ""
+    return forwardTape.current[readIndex]
+  }, [])
 
   const twoWayTapeReadCell = useCallback((readIndex) => {
     if (readIndex < 0) {
-      if (-(readIndex + 1) >= backwardTape.length) return ""
-      return backwardTape[-(readIndex + 1)]
+      if (-(readIndex + 1) >= backwardTape.current.length) return ""
+      return backwardTape.current[-(readIndex + 1)]
     }
-    if (readIndex >= forwardTape.length) return ""
-    return forwardTape[readIndex]
-  }, [forwardTape, backwardTape])
+    if (readIndex >= forwardTape.current.length) return ""
+    return forwardTape.current[readIndex]
+  }, [])
 
   const readCell = useCallback((readIndex) => {
     if (oneWayInfiniteTape) {
@@ -28,40 +28,38 @@ export default function useTape(oneWayInfiniteTape) {
   }, [oneWayTapeReadCell, twoWayTapeReadCell, oneWayInfiniteTape])
 
   const oneWayTapeWriteCell = useCallback((writeIndex, value) => {
-    if (writeIndex === forwardTape.length) {
-      setForwardTape(tape => [...tape, value])
+    if (writeIndex === forwardTape.current.length) {
+      forwardTape.current.push(value)
       return
     }
-    else if (writeIndex > forwardTape.length) throw new Error("Invalid Write: Must write linearly")
+    else if (writeIndex > forwardTape.current.length) throw new Error("Invalid Write: Must write linearly")
     if (writeIndex < 0) throw new Error("Invalid Write: Negative indices are invalid for one-way infinite tape")
-    setForwardTape(tape =>
-      tape.map((oldValue, index) => {
-        if (index === writeIndex) return value
-        return oldValue
-      })
-    )
-  }, [forwardTape])
+
+    forwardTape.current = forwardTape.current.map((oldValue, index) => {
+      if (index === writeIndex) return value
+      return oldValue
+    })
+  }, [])
 
   const twoWayTapeWriteCell = useCallback((writeIndex, value) => {
     if (writeIndex < 0) {
       if (-(writeIndex + 1) === backwardTape.length) {
-        setBackwardTape(tape => [...tape, value])
+        backwardTape.current.push(value)
         return
       }
-      if (-(writeIndex + 1) > backwardTape.length) throw new Error("Invalid write index. Must write linearly")
+      if (-(writeIndex + 1) > backwardTape.current.length) throw new Error("Invalid write index. Must write linearly")
     }
-    if (writeIndex > forwardTape.length) throw new Error("Invalid write index. Must write linearly")
-    if (writeIndex === forwardTape.length) {
-      setForwardTape(tape => [...tape, value])
+    if (writeIndex > forwardTape.current.length) throw new Error("Invalid write index. Must write linearly")
+    if (writeIndex === forwardTape.current.length) {
+      forwardTape.current.push(value)
       return
     }
-    setForwardTape(tape =>
-      tape.map((oldValue, index) =>{
-        if (index === writeIndex) return value
-        return oldValue
-      })
-    )
-  }, [backwardTape, forwardTape])
+
+    forwardTape.current = forwardTape.current.map((oldValue, index) => {
+      if (index === writeIndex) return value
+      return oldValue
+    })
+  }, [])
 
   const writeCell = useCallback((index, value) => {
     if (oneWayInfiniteTape) {
@@ -104,16 +102,16 @@ export default function useTape(oneWayInfiniteTape) {
   }, [oneWayTapeCenterSlice, twoWayTapeCenterSlice, oneWayInfiniteTape])
 
   const setTape = useCallback((tape) => {
-    setForwardTape(tape.forwardTape)
-    setBackwardTape(tape.backwardTape)
+    forwardTape.current = tape.forwardTape
+    backwardTape.current = tape.backwardTape
   }, [])
 
   const getTape = useCallback(() => {
     return {
-      forwardTape,
-      backwardTape
+      forwardTape: forwardTape.current,
+      backwardTape: backwardTape.current
     }
-  }, [forwardTape, backwardTape])
+  }, [])
 
   return [
     getCenteredSlice,
