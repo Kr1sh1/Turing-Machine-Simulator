@@ -2,7 +2,7 @@ import { Box, FormControl, FormControlLabel, FormLabel, IconButton, Radio, Radio
 import { useState } from "react";
 import StateSelection from "../components/StateSelection";
 import TransitionTable from "../components/TransitionTable";
-import { StateType } from "../Enums";
+import { MoveDirection, StateType } from "../Enums";
 import Simulator from "../components/Simulator";
 import { Lock, LockOpen } from "@mui/icons-material";
 
@@ -13,7 +13,7 @@ export default function Machines() {
       state: "s1",
       read: "",
       write: "",
-      move: 1,
+      move: MoveDirection.RIGHT,
       nextState: "s2",
     },
     {
@@ -21,7 +21,7 @@ export default function Machines() {
       state: "s2",
       read: "",
       write: "",
-      move: 1,
+      move: MoveDirection.RIGHT,
       nextState: "s1",
     }
   ])

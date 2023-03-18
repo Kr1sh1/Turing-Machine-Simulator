@@ -6,30 +6,14 @@ import {
 
 import { useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear"
-
-const moves = [
-  {
-    value: 0,
-    label: "Left",
-  },
-
-  {
-    value: 1,
-    label: "Right",
-  },
-
-  {
-    value: 2,
-    label: "Stay",
-  },
-]
+import { MoveDirection } from "../Enums";
 
 const defaultTransition = {
   id: 0,
   state: "",
   read: "",
   write: "",
-  move: 1,
+  move: MoveDirection.RIGHT,
   nextState: "",
 }
 
@@ -78,9 +62,9 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
 
                 <TableCell align="center">
                   <TextField disabled={editorIsLocked} size="small" select value={transition.move} onChange={event => transitionUpdate(event, transition.id, "move")}>
-                    {moves.map(move => (
-                      <MenuItem key={move.value} value={move.value}>
-                        {move.label}
+                    {Object.values(MoveDirection).map(move => (
+                      <MenuItem key={move} value={move}>
+                        {move}
                       </MenuItem>
                     ))}
                   </TextField>

@@ -10,3 +10,9 @@ export const StateType = Object.freeze({
   REJECT: "Rejecting State",
   HALT: "Halting State",
 })
+
+export const MoveDirection = Object.freeze({
+  LEFT: "Left",
+  RIGHT: "Right",
+  STAY: "Stay"
+})

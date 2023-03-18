@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react"
-import { StateType } from "../Enums"
+import { MoveDirection, StateType } from "../Enums"
 import useTape from "./useTape"
 
 export default function useTuringMachine(selections, transitions, oneWayInfiniteTape) {
@@ -24,10 +24,10 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
     state.current = transition.nextState
 
     switch (transition.move) {
-      case 0:
+      case MoveDirection.LEFT:
         if (!oneWayInfiniteTape || headPosition.current !== 0) headPosition.current -= 1
         break
-      case 1:
+      case MoveDirection.RIGHT:
         headPosition.current += 1
         break
       default:
