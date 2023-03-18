@@ -58,6 +58,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
     if (simulatorStatus !== SimulatorState.RUNNING) return
 
     const changeActiveNodeClass = (className) => {
+      if (nodes.find(node => node.id === activeNodeId).className === className) return
       setNodes(nodes =>
         nodes.map(node => {
           if (node.id === activeNodeId) {
