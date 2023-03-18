@@ -188,7 +188,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
 
   const stopPressed = () => {
     setSimulatorStatus(SimulatorState.PAUSED)
-    clearTimeout(tickerID)
+    clearTimeout(tickerID.current)
     setAvailableTransitions([])
   }
 
