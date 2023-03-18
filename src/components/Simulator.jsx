@@ -69,6 +69,18 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
       )
     }
 
+    const changeActiveNodeType = (type) => {
+      if (nodes.find(node => node.id === activeNodeId).type === type) return
+      setNodes(nodes =>
+        nodes.map(node => {
+          if (node.id === activeNodeId) {
+            node.type = type
+          }
+          return node
+        })
+      )
+    }
+
     const availableTransitions = getTransitions()
     switch (availableTransitions.length) {
       case 0:
@@ -79,6 +91,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
         else className = "rejectNode"
 
         changeActiveNodeClass(className)
+        changeActiveNodeType("output")
 
         setActiveTransitionID(-1)
         return
