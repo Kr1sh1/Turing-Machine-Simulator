@@ -18,3 +18,8 @@
   border-color: slateblue;
   border-inline-width: medium;
 }
+
+.component {
+  border: 1px solid grey;
+  border-radius: 10px;
+}

@@ -195,22 +195,28 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
   return (
     <>
     <Box sx={{ display: "flex" }}>
-      <MachineControls
-        reset={resetPressed}
-        start={startPressed}
-        stop={stopPressed}
-        setInitialValue={setInitialValue}
-        setSpeed={setSpeed}
-        simulatorStatus={simulatorStatus} />
-      <Tape
-        configuration={getConfiguration()}
-        getCenteredSlice={getCenteredSlice} />
+      <Box className="component" sx={{ padding: "10px", backgroundColor: "whitesmoke", marginRight: "1px" }}>
+        <MachineControls
+          reset={resetPressed}
+          start={startPressed}
+          stop={stopPressed}
+          setInitialValue={setInitialValue}
+          setSpeed={setSpeed}
+          simulatorStatus={simulatorStatus} />
+        <Status simulatorStatus={simulatorStatus} currentState={getConfiguration().state} selections={selections} />
+      </Box>
+      <Box className="component" sx={{ display: "flex", flexGrow: "1", minWidth: "0", backgroundColor: "lightgreen" }}>
+        <Tape
+          configuration={getConfiguration()}
+          getCenteredSlice={getCenteredSlice} />
+      </Box>
     </Box>
-    <Status simulatorStatus={simulatorStatus} currentState={getConfiguration().state} selections={selections} />
-    <ReactFlowProvider>
-      <ComputationTree rawNodes={nodes} rawEdges={edges} activeNodeId={activeNodeId} simulatorStatus={simulatorStatus} nodeClicked={nodeClicked} />
-    </ReactFlowProvider>
-    <TransitionSelection availableTransitions={availableTransitions} transitionSelected={transitionSelected} />
+    <Box sx={{ display: "flex", alignItems: "stretch", height: "300px", marginTop: "1px" }}>
+      <ReactFlowProvider>
+        <ComputationTree rawNodes={nodes} rawEdges={edges} activeNodeId={activeNodeId} simulatorStatus={simulatorStatus} nodeClicked={nodeClicked} />
+      </ReactFlowProvider>
+      <TransitionSelection availableTransitions={availableTransitions} transitionSelected={transitionSelected} />
+    </Box>
     </>
   )
 })

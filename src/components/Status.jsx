@@ -24,7 +24,7 @@ export default function Status({ simulatorStatus, currentState, selections }) {
   }
 
   return (
-    <Box className={simulatorStatus} sx={{ display: "flex", flexDirection: "column", borderRadius: "10px", height: "60px", width: "150px", backgroundColor: color, justifyContent: "center", textAlign: "center" }}>
+    <Box className={simulatorStatus} sx={{ display: "flex", flexDirection: "column", marginTop: "10px", color: "white", borderRadius: "10px", height: "4em", width: "100%", backgroundColor: color, justifyContent: "center", textAlign: "center" }}>
       <Typography variant="h5">
         {simulatorStatus}
       </Typography>

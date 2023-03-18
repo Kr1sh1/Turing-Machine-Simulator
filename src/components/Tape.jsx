@@ -53,7 +53,7 @@ export default memo(function Tape({ configuration, getCenteredSlice }) {
     ))
 
   return (
-    <Box sx={{ textAlign: "center", flexGrow: "1", alignSelf: "center", minWidth: "0" }} ref={container}>
+    <Box sx={{ textAlign: "center", alignSelf: "center", width: "100%" }} ref={container}>
       Current State: {configuration.state}
       <br></br><br />
       <Box ref={parent} sx={{ display: "flex", justifyContent: "center" }}>

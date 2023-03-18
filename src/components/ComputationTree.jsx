@@ -3,6 +3,7 @@ import ReactFlow, { ConnectionLineType, Controls, useReactFlow } from 'reactflow
 import dagre from 'dagre';
 import 'reactflow/dist/style.css';
 import { SimulatorState } from '../Enums';
+import { Box } from '@mui/material';
 
 const nodeWidth = 150
 const nodeHeight = 46
@@ -57,7 +58,7 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
   const simulatorIsNotRunning = simulatorStatus !== SimulatorState.RUNNING
 
   return (
-    <div className="layoutflow" style={{ width: "100%", height: "300px", border: "1px solid" }}>
+    <Box className="component" sx={{ flexGrow: "1", minWidth: "0", marginRight: "1px", backgroundColor: "burlywood" }}>
       <ReactFlow
         proOptions={{ hideAttribution: true }}
 
@@ -79,6 +80,6 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
       >
         <Controls showInteractive={false} showFitView={simulatorIsNotRunning} />
       </ReactFlow>
-    </div>
+    </Box>
   );
 })

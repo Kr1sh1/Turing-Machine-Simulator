@@ -19,8 +19,8 @@ const marks = [
 export default function MachineControls({reset, start, stop, setInitialValue, setSpeed, simulatorStatus }) {
   return (
     <Box>
-      <Slider defaultValue={0} sx={{ margin: "10px" }} min={-1} step={1} max={1} marks={marks} onChange={(event, newValue) => setSpeed(2 ** newValue)} />
-      <TextField label="Initial Input" margin="normal" fullWidth onChange={(event) => setInitialValue(event.target.value)} />
+      <Slider defaultValue={0} sx={{ margin: "10px", width: "90%", left: "5px" }} min={-1} step={1} max={1} marks={marks} onChange={(event, newValue) => setSpeed(2 ** newValue)} />
+      <TextField variant="filled" label="Initial Input" margin="normal" fullWidth onChange={(event) => setInitialValue(event.target.value)} />
       <Stack direction="row" spacing={1}>
         <Button variant="contained" color="info" fullWidth onClick={reset}>Reset</Button>
         <Button variant="contained" color="success" fullWidth onClick={start} disabled={(simulatorStatus !== SimulatorState.PAUSED)}>Start</Button>
