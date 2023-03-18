@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Chip } from "@mui/material";
 import { getIncomers, getOutgoers, ReactFlowProvider } from "reactflow";
 import ComputationTree from "./ComputationTree";
 import MachineControls from "./MachineControls";
@@ -9,11 +9,11 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { SimulatorState, StateType } from "../Enums";
 import TransitionSelection from "./TransitionSelection";
 
-const makeNode = (id, label) => {
+const makeNode = (id, state) => {
   return {
     id: `${id}`,
     position: { x: 0, y: 0 },
-    data: { label: label },
+    data: { label: makeLabel(state) },
     deletable: false,
     sourcePosition: "right",
     targetPosition: "left",
@@ -29,13 +29,19 @@ const makeEdge = (id, source, target) => {
   }
 }
 
+const makeLabel = (state) => {
+  return (
+    <Chip label={state} size="small" variant="filled" color="secondary" sx={{ cursor: "grab" }} />
+  )
+}
+
 export default memo(function Simulator({ selections, transitions, oneWayInfiniteTape, setActiveTransitionID }) {
   const tickerID = useRef()
   const [initialValue, setInitialValue] = useState("")
   const [simulatorStatus, setSimulatorStatus] = useState(SimulatorState.PAUSED)
   const [ticks, setTicks] = useState(0)
   const [speed, setSpeed] = useState(1)
-  const [nodes, setNodes] = useState([{...makeNode(0, "First Node"), type: "input"}])
+  const [nodes, setNodes] = useState([{...makeNode(0, `${selections[StateType.INITIAL]}`), type: "input"}])
   const [edges, setEdges] = useState([])
   const [counter, setCounter] = useState(1)
   const [activeNodeId, setActiveNodeId] = useState("0")
@@ -81,7 +87,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
         const children = getChildren()
         let nextNodeId = undefined
         if (children.length === 0) {
-          const newNode = makeNode(counter, "Not First Node")
+          const newNode = makeNode(counter, `${getConfiguration().state}`)
           nextNodeId = newNode.id
           setNodes([...nodes, {...newNode, data: {...newNode.data, transitionId: availableTransitions[0].id}}])
           setCounter(count => count + 1)
@@ -126,7 +132,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
     const child = getChildren().find(node => node.data.transitionId === id)
     let nextNodeId = undefined
     if (!child) {
-      const newNode = makeNode(counter, "Not First Node")
+      const newNode = makeNode(counter, `${getConfiguration().state}`)
       nextNodeId = newNode.id
       setNodes([...nodes, {...newNode, data: {...newNode.data, transitionId: id}}])
       setCounter(count => count + 1)
@@ -154,7 +160,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
     stopPressed()
     setActiveTransitionID(-1)
     reset(initialValue)
-    const newNode = {...makeNode(counter, "First Node"), type: "input"}
+    const newNode = {...makeNode(counter, `${selections[StateType.INITIAL]}`), type: "input"}
     setNodes([newNode])
     setActiveNodeId(newNode.id)
     setCounter(count => count + 1)

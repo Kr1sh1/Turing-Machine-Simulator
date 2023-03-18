@@ -5,7 +5,7 @@ import 'reactflow/dist/style.css';
 import { SimulatorState } from '../Enums';
 
 const nodeWidth = 150
-const nodeHeight = 20
+const nodeHeight = 46
 
 export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId, simulatorStatus, nodeClicked }) {
   const { setCenter } = useReactFlow()
@@ -57,7 +57,7 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
   const simulatorIsNotRunning = simulatorStatus !== SimulatorState.RUNNING
 
   return (
-    <div className="layoutflow" style={{ width: "100%", height: "200px" }}>
+    <div className="layoutflow" style={{ width: "100%", height: "300px", border: "1px solid" }}>
       <ReactFlow
         proOptions={{ hideAttribution: true }}
 
@@ -65,7 +65,7 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
         edges={rawEdges}
         connectionLineType={ConnectionLineType.SmoothStep}
         onNodeClick={nodeClicked}
-        // onlyRenderVisibleElements={true}
+        onlyRenderVisibleElements={true}
 
         nodesDraggable={false}
         nodesFocusable={simulatorIsNotRunning}
