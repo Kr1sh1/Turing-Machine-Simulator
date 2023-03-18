@@ -26,7 +26,7 @@ export default function Machines() {
     }
   ])
   const [selections, setSelections] = useState({
-    [StateType.INITIAL]: "",
+    [StateType.INITIAL]: "s1",
     [StateType.ACCEPT]: "",
     [StateType.REJECT]: "",
   })
