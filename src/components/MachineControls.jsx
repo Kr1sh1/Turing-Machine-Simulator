@@ -14,15 +14,9 @@ const marks = [
     value: 1,
     label: "2x",
   },
-  // {
-  //   value: 2,
-  //   label: "4x",
-  // },
 ];
 
-export default function MachineControls({
-  reset, start, stop, setInitialValue, setSpeed,
-  simulatorStatus }) {
+export default function MachineControls({reset, start, stop, setInitialValue, setSpeed, simulatorStatus }) {
   return (
     <Box>
       <Slider defaultValue={0} sx={{ margin: "10px" }} min={-1} step={1} max={1} marks={marks} onChange={(event, newValue) => setSpeed(2 ** newValue)} />
