@@ -41,7 +41,7 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
   return (
     <Box sx={{ flexGrow: 1, minWidth: "0" }}>
       <TableContainer>
-        <Table>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell align="center">State</TableCell>
@@ -82,7 +82,9 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
         </Table>
       </TableContainer>
 
-      <Button variant="contained" sx={{ borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px" }} disabled={editorIsLocked} fullWidth onClick={newRow}>+</Button>
+      {!editorIsLocked &&
+        <Button variant="contained" sx={{ borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px" }} fullWidth onClick={newRow}>+</Button>
+      }
     </Box>
   )
 }
