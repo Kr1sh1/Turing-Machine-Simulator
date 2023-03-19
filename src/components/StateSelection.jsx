@@ -19,7 +19,7 @@ export default function StateSelection({ states, selections, setSelections, halt
   }
 
   return (
-    <Stack spacing={2} minWidth="160px">
+    <Stack spacing={2} width="160px">
       {selectionFilter(Object.keys(selections)).map(type => (
         <FormControl disabled={editorIsLocked} key={type}>
           <InputLabel>{type}</InputLabel>
