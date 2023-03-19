@@ -1,6 +1,7 @@
 import { FormControl, InputLabel, MenuItem, Select, Stack } from "@mui/material";
+import { StateType } from "../Enums";
 
-export default function StateSelection({ states, selections, setSelections, editorIsLocked }) {
+export default function StateSelection({ states, selections, setSelections, haltingState, editorIsLocked }) {
   const handleSelectionChange = (value, type) => {
     let otherTypes = Object.keys(selections).filter(selectionType => selectionType !== type)
     let sameValue = otherTypes.find(selectionType => selections[selectionType] === value)
@@ -12,14 +13,17 @@ export default function StateSelection({ states, selections, setSelections, edit
     }
   }
 
+  const selectionFilter = (selectionKeys) => {
+    if (haltingState) return selectionKeys.filter(key => (key !== StateType.ACCEPT) && (key !== StateType.REJECT))
+    return selectionKeys.filter(key => key !== StateType.HALT)
+  }
+
   return (
     <Stack spacing={2} minWidth="160px">
-      {Object.keys(selections).map(type => (
+      {selectionFilter(Object.keys(selections)).map(type => (
         <FormControl disabled={editorIsLocked} key={type}>
           <InputLabel>{type}</InputLabel>
           <Select
-            labelId="demo-simple-select-helper-label"
-            id="demo-simple-select-helper"
             value={selections[type]}
             label={type}
             onChange={event => handleSelectionChange(event.target.value, type)}

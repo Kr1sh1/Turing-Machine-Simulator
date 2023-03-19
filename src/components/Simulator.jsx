@@ -35,7 +35,7 @@ const makeLabel = (state) => {
   )
 }
 
-export default memo(function Simulator({ selections, transitions, oneWayInfiniteTape, setActiveTransitionID }) {
+export default memo(function Simulator({ selections, transitions, oneWayInfiniteTape, haltingState, setActiveTransitionID }) {
   const tickerID = useRef()
   const counter = useRef(1)
   const [initialValue, setInitialValue] = useState("")
@@ -87,8 +87,8 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
       case 0:
         setSimulatorStatus(SimulatorState.TERMINATED)
         let className = undefined
-        if (getConfiguration().state === selections[StateType.ACCEPT]) className = "acceptNode"
-        else if (getConfiguration().state === selections[StateType.HALT]) className = "haltNode"
+        if (haltingState) className = "haltNode"
+        else if (getConfiguration().state === selections[StateType.ACCEPT]) className = "acceptNode"
         else className = "rejectNode"
 
         changeActiveNodeClass(className)
@@ -216,7 +216,11 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
           setInitialValue={setInitialValue}
           setSpeed={setSpeed}
           simulatorStatus={simulatorStatus} />
-        <Status simulatorStatus={simulatorStatus} currentState={getConfiguration().state} selections={selections} />
+        <Status
+          simulatorStatus={simulatorStatus}
+          currentState={getConfiguration().state}
+          selections={selections}
+          haltingState={haltingState} />
       </Box>
 
       <Box className="component" sx={{ display: "flex", flexGrow: "1", minWidth: "0", backgroundColor: "lightgreen" }}>

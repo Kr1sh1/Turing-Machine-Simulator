@@ -1,19 +1,16 @@
 import { Box, Typography } from "@mui/material";
 import { SimulatorState, StateType } from "../Enums";
 
-export default function Status({ simulatorStatus, currentState, selections }) {
+export default function Status({ simulatorStatus, currentState, selections, haltingState }) {
   let color = "grey"
   let subtext = null
 
   if (simulatorStatus === SimulatorState.TERMINATED) {
-    switch (currentState) {
+    if (haltingState) color = "blue"
+    else switch (currentState) {
       case selections[StateType.ACCEPT]:
         color = "greenyellow"
         subtext = "Input Accepted"
-        break;
-
-      case selections[StateType.HALT]:
-        color = "blue"
         break;
 
       default:
