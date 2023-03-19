@@ -53,7 +53,7 @@ export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId,
 
   const x = layoutedNodes[activeNodeIndex].position.x + nodeWidth / 2;
   const y = layoutedNodes[activeNodeIndex].position.y + nodeHeight / 2;
-  setCenter(x, y, { duration: 250, zoom: 1.25 })
+  setCenter(x, y, { duration: 250, zoom: 1.2 })
 
   const simulatorIsNotRunning = simulatorStatus !== SimulatorState.RUNNING
 
