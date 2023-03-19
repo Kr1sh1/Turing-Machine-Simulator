@@ -9,7 +9,7 @@ const CaseSensitiveButton = styled(Button)(`
 export default function TransitionSelection({ availableTransitions, transitionSelected, alwaysPickRandomly, pickRandom, changeAlwaysPick }) {
   return (
     <Box className="component" sx={{ display: "flex", flexDirection: "column", flexBasis: "325px", alignItems: "center", backgroundColor: "teal", color: "white", padding: "10px", justifyContent: "space-between" }}>
-      <Typography variant="body1" textAlign={"center"} noWrap sx={{ marginBottom: "10px" }}>
+      <Typography variant="body1" textAlign={"center"} noWrap sx={{ overflow: "visible" }}>
         Available Transitions
       </Typography>
       <Stack spacing={1} sx={{ overflowY: "auto" }}>

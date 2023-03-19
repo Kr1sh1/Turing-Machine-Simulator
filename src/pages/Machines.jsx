@@ -1,10 +1,11 @@
-import { Box, FormControl, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup, Snackbar } from "@mui/material";
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Snackbar } from "@mui/material";
 import { useState } from "react";
 import StateSelection from "../components/StateSelection";
 import TransitionTable from "../components/TransitionTable";
 import { MoveDirection, StateType } from "../Enums";
 import Simulator from "../components/Simulator";
 import { Lock, LockOpen } from "@mui/icons-material";
+import { Stack } from "@mui/system";
 
 export default function Machines() {
   const [transitions, setTransitions] = useState([
@@ -96,48 +97,60 @@ export default function Machines() {
     <>
     <Snackbar />
 
-    <Box sx={{ display: "flex" }}>
-      <StateSelection
-        states={states}
-        selections={selections}
-        setSelections={setSelections}
-        haltingState={haltingState}
-        editorIsLocked={editorIsLocked} />
-      <TransitionTable
-        transitions={transitions}
-        setTransitions={setTransitions}
-        editorIsLocked={editorIsLocked}
-        activeTransitionID={activeTransitionID} />
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <Box sx={{ display: "flex", marginBottom: "1px", maxHeight: "273px" }}>
+        <Box className="component" sx={{ padding: "10px", backgroundColor: "thistle" }}>
+          <Box sx={{ display: "flex" }}>
+            <Stack sx={{ width: "200px" }}>
+              <FormControl disabled={editorIsLocked}>
+                <FormLabel>Type of infinite tape</FormLabel>
+                <RadioGroup value={oneWayInfiniteTape ? "1" : "2"} onChange={event => setOneWayInfiniteTape(event.target.value === "1")}>
+                  <FormControlLabel value="1" control={<Radio />} label="One-way" />
+                  <FormControlLabel value="2" control={<Radio />} label="Two-way" />
+                </RadioGroup>
+              </FormControl>
+
+              <FormControl disabled={editorIsLocked}>
+                <FormLabel>Type of terminal states</FormLabel>
+                <RadioGroup value={haltingState ? "1" : "2"} onChange={event => handleStateTypeChange(event.target.value === "1")}>
+                  <FormControlLabel value="1" control={<Radio />} label="Halt" />
+                  <FormControlLabel value="2" control={<Radio />} label="Accept & Reject" />
+                </RadioGroup>
+              </FormControl>
+            </Stack>
+
+            <Box sx={{}}>
+              <StateSelection
+                  states={states}
+                  selections={selections}
+                  setSelections={setSelections}
+                  haltingState={haltingState}
+                  editorIsLocked={editorIsLocked} />
+            </Box>
+          </Box>
+          <Button fullWidth onClick={lockPressed} color="error" variant="contained" endIcon={!editorIsLocked ? <Lock sx={{ color: "gold" }} /> : <LockOpen sx={{ color: "green" }} />}>
+            {editorIsLocked ? "Edit Turing Machine" : "Create Turing Machine"}
+          </Button>
+        </Box>
+
+        <TransitionTable
+          transitions={transitions}
+          setTransitions={setTransitions}
+          editorIsLocked={editorIsLocked}
+          activeTransitionID={activeTransitionID} />
+      </Box>
+
+      <Box sx={{ flexGrow: "1", height: "100%" }}>
+      {editorIsLocked &&
+        <Simulator
+          selections={selections}
+          transitions={transitions}
+          oneWayInfiniteTape={oneWayInfiniteTape}
+          haltingState={haltingState}
+          setActiveTransitionID={setActiveTransitionID} />
+        }
+      </Box>
     </Box>
-
-    <FormControl disabled={editorIsLocked}>
-      <FormLabel>Type of infinite tape</FormLabel>
-      <RadioGroup value={oneWayInfiniteTape ? "1" : "2"} onChange={event => setOneWayInfiniteTape(event.target.value === "1")}>
-        <FormControlLabel value="1" control={<Radio />} label="One-way" />
-        <FormControlLabel value="2" control={<Radio />} label="Two-way" />
-      </RadioGroup>
-    </FormControl>
-
-    <FormControl disabled={editorIsLocked}>
-      <FormLabel>Type of terminal states</FormLabel>
-      <RadioGroup value={haltingState ? "1" : "2"} onChange={event => handleStateTypeChange(event.target.value === "1")}>
-        <FormControlLabel value="1" control={<Radio />} label="Halt" />
-        <FormControlLabel value="2" control={<Radio />} label="Accept & Reject" />
-      </RadioGroup>
-    </FormControl>
-
-    <IconButton onClick={lockPressed}>
-      {editorIsLocked ? <Lock sx={{ color: "gold" }} /> : <LockOpen sx={{ color: "green" }} />}
-    </IconButton>
-
-    {editorIsLocked &&
-    <Simulator
-      selections={selections}
-      transitions={transitions}
-      oneWayInfiniteTape={oneWayInfiniteTape}
-      haltingState={haltingState}
-      setActiveTransitionID={setActiveTransitionID} />
-    }
     </>
   )
 }

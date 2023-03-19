@@ -39,7 +39,7 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
   }
 
   return (
-    <Box sx={{ flexGrow: 1, minWidth: "0" }}>
+    <Box className="component" sx={{ flexGrow: 1, minWidth: "0", padding: "10px", marginLeft: "1px", overflowY: "auto" }}>
       <TableContainer>
         <Table size="small">
           <TableHead>

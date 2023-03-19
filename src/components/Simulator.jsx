@@ -206,47 +206,47 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
   }
 
   return (
-    <>
-    <Box sx={{ display: "flex" }}>
-      <Box className="component" sx={{ padding: "10px", backgroundColor: "whitesmoke", marginRight: "1px" }}>
-        <MachineControls
-          reset={resetPressed}
-          start={startPressed}
-          stop={stopPressed}
-          setInitialValue={setInitialValue}
-          setSpeed={setSpeed}
-          simulatorStatus={simulatorStatus} />
-        <Status
-          simulatorStatus={simulatorStatus}
-          currentState={getConfiguration().state}
-          selections={selections}
-          haltingState={haltingState} />
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <Box sx={{ display: "flex" }}>
+        <Box className="component" sx={{ padding: "10px", backgroundColor: "whitesmoke", marginRight: "1px" }}>
+          <MachineControls
+            reset={resetPressed}
+            start={startPressed}
+            stop={stopPressed}
+            setInitialValue={setInitialValue}
+            setSpeed={setSpeed}
+            simulatorStatus={simulatorStatus} />
+          <Status
+            simulatorStatus={simulatorStatus}
+            currentState={getConfiguration().state}
+            selections={selections}
+            haltingState={haltingState} />
+        </Box>
+
+        <Box className="component" sx={{ display: "flex", flexGrow: "1", minWidth: "0", backgroundColor: "lightgreen" }}>
+          <Tape
+            configuration={getConfiguration()}
+            getCenteredSlice={getCenteredSlice} />
+        </Box>
       </Box>
 
-      <Box className="component" sx={{ display: "flex", flexGrow: "1", minWidth: "0", backgroundColor: "lightgreen" }}>
-        <Tape
-          configuration={getConfiguration()}
-          getCenteredSlice={getCenteredSlice} />
+      <Box sx={{ display: "flex", alignItems: "stretch", marginTop: "1px", flexGrow: "1" }}>
+        <ReactFlowProvider>
+          <ComputationTree
+            rawNodes={nodes}
+            rawEdges={edges}
+            activeNodeId={activeNodeId}
+            simulatorStatus={simulatorStatus}
+            nodeClicked={nodeClicked} />
+        </ReactFlowProvider>
+
+        <TransitionSelection
+          availableTransitions={availableTransitions}
+          transitionSelected={transitionSelected}
+          alwaysPickRandomly={alwaysPickRandomly}
+          changeAlwaysPick={changeAlwaysPickRandom}
+          pickRandom={pickRandom} />
       </Box>
     </Box>
-
-    <Box sx={{ display: "flex", alignItems: "stretch", height: "300px", marginTop: "1px" }}>
-      <ReactFlowProvider>
-        <ComputationTree
-          rawNodes={nodes}
-          rawEdges={edges}
-          activeNodeId={activeNodeId}
-          simulatorStatus={simulatorStatus}
-          nodeClicked={nodeClicked} />
-      </ReactFlowProvider>
-
-      <TransitionSelection
-        availableTransitions={availableTransitions}
-        transitionSelected={transitionSelected}
-        alwaysPickRandomly={alwaysPickRandomly}
-        changeAlwaysPick={changeAlwaysPickRandom}
-        pickRandom={pickRandom} />
-    </Box>
-    </>
   )
 })
