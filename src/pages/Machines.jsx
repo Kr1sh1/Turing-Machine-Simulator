@@ -141,13 +141,26 @@ export default function Machines() {
       </Box>
 
       <Box sx={{ flexGrow: "1", height: "100%" }}>
-      {editorIsLocked &&
-        <Simulator
-          selections={selections}
-          transitions={transitions}
-          oneWayInfiniteTape={oneWayInfiniteTape}
-          haltingState={haltingState}
-          setActiveTransitionID={setActiveTransitionID} />
+        {!editorIsLocked &&
+          <Box className="component" sx={{ display: "flex",
+                                           flexDirection: "column",
+                                           height: "100%",
+                                           alignItems: "stretch",
+                                           justifyContent: "center",
+                                           textAlign: "center",
+                                           backgroundColor: "gold" }}>
+            <h1>
+              UNDER CONSTRUCTION
+            </h1>
+          </Box>
+        }
+        {editorIsLocked &&
+          <Simulator
+            selections={selections}
+            transitions={transitions}
+            oneWayInfiniteTape={oneWayInfiniteTape}
+            haltingState={haltingState}
+            setActiveTransitionID={setActiveTransitionID} />
         }
       </Box>
     </Box>
