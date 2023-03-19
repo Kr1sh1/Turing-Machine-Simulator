@@ -46,6 +46,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
   const [edges, setEdges] = useState([])
   const [activeNodeId, setActiveNodeId] = useState("0")
   const [availableTransitions, setAvailableTransitions] = useState([])
+  const [alwaysPickRandomly, setAlwaysPickRandomly] = useState(false)
   const [
     getCenteredSlice,
     getConfiguration,
@@ -113,7 +114,10 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
         break
       default:
         changeActiveNodeClass("nondetNode")
-        setAvailableTransitions(availableTransitions)
+
+        if (alwaysPickRandomly) pickRandom(availableTransitions)
+        else setAvailableTransitions(availableTransitions)
+
         return
     }
 
@@ -170,6 +174,15 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
     }
   }, [buildTransitionSequence, simulatorStatus, setActiveTransitionID, reset, performTransition])
 
+  const changeAlwaysPickRandom = (availableTransitions, alwaysPick) => {
+    setAlwaysPickRandomly(alwaysPick)
+    if (availableTransitions.length !== 0) pickRandom(availableTransitions)
+  }
+  const pickRandom = (availableTransitions) => {
+    const transition = availableTransitions[Math.floor(Math.random() * availableTransitions.length)]
+    transitionSelected(transition.id)
+  }
+
   const resetPressed = () => {
     stopPressed()
     setActiveTransitionID(-1)
@@ -205,17 +218,30 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
           simulatorStatus={simulatorStatus} />
         <Status simulatorStatus={simulatorStatus} currentState={getConfiguration().state} selections={selections} />
       </Box>
+
       <Box className="component" sx={{ display: "flex", flexGrow: "1", minWidth: "0", backgroundColor: "lightgreen" }}>
         <Tape
           configuration={getConfiguration()}
           getCenteredSlice={getCenteredSlice} />
       </Box>
     </Box>
+
     <Box sx={{ display: "flex", alignItems: "stretch", height: "300px", marginTop: "1px" }}>
       <ReactFlowProvider>
-        <ComputationTree rawNodes={nodes} rawEdges={edges} activeNodeId={activeNodeId} simulatorStatus={simulatorStatus} nodeClicked={nodeClicked} />
+        <ComputationTree
+          rawNodes={nodes}
+          rawEdges={edges}
+          activeNodeId={activeNodeId}
+          simulatorStatus={simulatorStatus}
+          nodeClicked={nodeClicked} />
       </ReactFlowProvider>
-      <TransitionSelection availableTransitions={availableTransitions} transitionSelected={transitionSelected} />
+
+      <TransitionSelection
+        availableTransitions={availableTransitions}
+        transitionSelected={transitionSelected}
+        alwaysPickRandomly={alwaysPickRandomly}
+        changeAlwaysPick={changeAlwaysPickRandom}
+        pickRandom={pickRandom} />
     </Box>
     </>
   )
