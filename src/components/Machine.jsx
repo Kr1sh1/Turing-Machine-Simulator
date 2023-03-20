@@ -1,13 +1,13 @@
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Snackbar } from "@mui/material";
 import { useState } from "react";
-import StateSelection from "../components/StateSelection";
-import TransitionTable from "../components/TransitionTable";
+import StateSelection from "./MachineComponents/StateSelection";
+import TransitionTable from "./MachineComponents/TransitionTable";
 import { MoveDirection, StateType } from "../Enums";
-import Simulator from "../components/Simulator";
+import Simulator from "./Simulator";
 import { Lock, LockOpen } from "@mui/icons-material";
 import { Stack } from "@mui/system";
 
-export default function Machines() {
+export default function Machine() {
   const [transitions, setTransitions] = useState([
     {
       id: 0,

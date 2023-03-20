@@ -1,13 +1,13 @@
 import { Box, Chip } from "@mui/material";
 import { getIncomers, getOutgoers, ReactFlowProvider } from "reactflow";
-import ComputationTree from "./ComputationTree";
-import MachineControls from "./MachineControls";
-import Status from "./Status";
-import Tape from "./Tape";
+import ComputationTree from "./MachineComponents/ComputationTree";
+import MachineControls from "./MachineComponents/MachineControls";
+import Status from "./MachineComponents/Status";
+import Tape from "./MachineComponents/Tape";
 import useTuringMachine from "../hooks/useTuringMachine";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { SimulatorState, StateType } from "../Enums";
-import TransitionSelection from "./TransitionSelection";
+import TransitionSelection from "./MachineComponents/TransitionSelection";
 
 const makeNode = (id, state) => {
   return {

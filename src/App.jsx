@@ -1,5 +1,5 @@
 import Home from './pages/Home'
-import Machines from './pages/Machines'
+import Machine from './components/Machine'
 import "./App.css"
 
 import {
@@ -13,7 +13,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route index element={<Home />} />
-      <Route path='/machines' element={<Machines />} />
+      <Route path='/machines' element={<Machine />} />
     </Route>
   )
 );

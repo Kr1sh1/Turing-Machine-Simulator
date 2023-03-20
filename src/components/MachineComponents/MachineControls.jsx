@@ -1,5 +1,5 @@
 import { Button, TextField, Box, Stack, Slider } from "@mui/material";
-import { SimulatorState } from "../Enums";
+import { SimulatorState } from "../../Enums";
 
 const marks = [
   {

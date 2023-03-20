@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select, Stack } from "@mui/material";
-import { StateType } from "../Enums";
+import { StateType } from "../../Enums";
 
 export default function StateSelection({ states, selections, setSelections, haltingState, editorIsLocked }) {
   const handleSelectionChange = (value, type) => {

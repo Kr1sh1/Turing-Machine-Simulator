@@ -6,7 +6,7 @@ import {
 
 import { useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear"
-import { MoveDirection } from "../Enums";
+import { MoveDirection } from "../../Enums";
 
 const defaultTransition = {
   id: 0,

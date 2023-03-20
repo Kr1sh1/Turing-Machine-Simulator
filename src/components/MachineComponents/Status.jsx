@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { SimulatorState, StateType } from "../Enums";
+import { SimulatorState, StateType } from "../../Enums";
 
 export default function Status({ simulatorStatus, currentState, selections, haltingState }) {
   let color = "grey"

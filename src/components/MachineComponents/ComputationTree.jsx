@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import ReactFlow, { ConnectionLineType, Controls, useReactFlow } from 'reactflow';
 import dagre from 'dagre';
 import 'reactflow/dist/style.css';
-import { SimulatorState } from '../Enums';
+import { SimulatorState } from '../../Enums';
 import { Box } from '@mui/material';
 
 const nodeWidth = 150
