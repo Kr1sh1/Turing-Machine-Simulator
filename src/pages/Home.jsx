@@ -54,7 +54,7 @@ export default function Home() {
           onChange={loadFile}
         />
         <label htmlFor="file-input">
-          <Button variant="contained" component="span">
+          <Button variant="contained" component="span" sx={{ right: "0", top: "0" }}>
             Load from file
           </Button>
         </label>
