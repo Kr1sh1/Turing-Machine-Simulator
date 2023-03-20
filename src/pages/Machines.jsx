@@ -3,6 +3,14 @@ import { useLayoutEffect, useState } from "react";
 import Machine from "../components/Machine";
 import LoadExampleDialog from "../components/LoadExampleDialog";
 import { useLocation } from "react-router-dom";
+import { saveAs } from 'file-saver';
+
+const savedFileKeyMap = Object.freeze({
+  transitions: "defaultTransitions",
+  selections: "defaultSelections",
+  oneWayInfiniteTape: "defaultOneWayInfiniteTape",
+  haltingState: "defaultHaltingState",
+})
 
 export default function Machines() {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -42,8 +50,13 @@ export default function Machines() {
   }
 
   const saveFile = () => {
-    const machine = JSON.stringify(activeMachine)
-    console.log(machine)
+    const machine = {}
+    for (const [key, value] of Object.entries(activeMachine)) {
+      const newKey = savedFileKeyMap[key];
+      machine[newKey] = value;
+    }
+    const blob = new Blob([JSON.stringify(machine, null, 2)], { type: 'text/plain;charset=utf-8' });
+    saveAs(blob, title);
   }
 
   return (
