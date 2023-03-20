@@ -1,41 +1,30 @@
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Snackbar } from "@mui/material";
-import { useState } from "react";
+import { memo, useState } from "react";
 import StateSelection from "./MachineComponents/StateSelection";
 import TransitionTable from "./MachineComponents/TransitionTable";
-import { MoveDirection, StateType } from "../Enums";
+import { StateType } from "../Enums";
 import Simulator from "./Simulator";
 import { Lock, LockOpen } from "@mui/icons-material";
 import { Stack } from "@mui/system";
 
-export default function Machine() {
-  const [transitions, setTransitions] = useState([
-    {
-      id: 0,
-      state: "s1",
-      read: "",
-      write: "",
-      move: MoveDirection.RIGHT,
-      nextState: "s2",
-    },
-    {
-      id: 1,
-      state: "s2",
-      read: "",
-      write: "",
-      move: MoveDirection.RIGHT,
-      nextState: "s1",
-    }
-  ])
-  const [selections, setSelections] = useState({
-    [StateType.INITIAL]: "s1",
+export default memo(function Machine({
+    defaultTransitions = [],
+    defaultSelections = null,
+    defaultOneWayInfiniteTape = true,
+    defaultHaltingState = true,
+  }) {
+
+  const [transitions, setTransitions] = useState(defaultTransitions)
+  const [selections, setSelections] = useState(defaultSelections || {
+    [StateType.INITIAL]: "",
     [StateType.HALT]: "",
     [StateType.ACCEPT]: "",
     [StateType.REJECT]: "",
   })
   const [editorIsLocked, setEditorIsLocked] = useState(false)
   const [activeTransitionID, setActiveTransitionID] = useState(-1)
-  const [oneWayInfiniteTape, setOneWayInfiniteTape] = useState(true)
-  const [haltingState, setHaltingState] = useState(true)
+  const [oneWayInfiniteTape, setOneWayInfiniteTape] = useState(defaultOneWayInfiniteTape)
+  const [haltingState, setHaltingState] = useState(defaultHaltingState)
 
   const uniqueStates = new Set(
     transitions.reduce(
@@ -97,7 +86,7 @@ export default function Machine() {
     <>
     <Snackbar />
 
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", flexGrow: "1" }}>
       <Box sx={{ display: "flex", marginBottom: "1px", maxHeight: "273px" }}>
         <Box className="component" sx={{ padding: "10px", backgroundColor: "thistle" }}>
           <Box sx={{ display: "flex" }}>
@@ -166,4 +155,4 @@ export default function Machine() {
     </Box>
     </>
   )
-}
+})

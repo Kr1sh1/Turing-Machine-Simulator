@@ -1,8 +1,19 @@
 import { Box, Button } from '@mui/material'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
+import LoadExampleDialog from '../components/LoadExampleDialog'
 
 export default function Home() {
   const navigate = useNavigate()
+  const [exampleDialogOpen, setExampleDialogOpen] = useState(false)
+
+  const itemClicked = (item) => {
+    if (item) {
+      navigate("machines", {state: item})
+    } else {
+      setExampleDialogOpen(false)
+    }
+  }
 
   return (
     <Box sx={{ alignSelf: "center", display: "flex",
@@ -21,7 +32,7 @@ export default function Home() {
           left: "0",
           top: "0",
           }}
-          onClick={() => navigate("somewhere")}
+          onClick={() => setExampleDialogOpen(true)}
         >Load an example</Button>
 
         <Button variant='contained' sx={{
@@ -38,6 +49,7 @@ export default function Home() {
           onClick={() => navigate("machines")}
         >Create a Turing Machine</Button>
       </Box>
+      <LoadExampleDialog open={exampleDialogOpen} itemClicked={itemClicked} turingMachineActive={false} />
     </Box>
   )
 }
