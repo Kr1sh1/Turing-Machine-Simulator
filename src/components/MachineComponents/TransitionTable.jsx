@@ -18,13 +18,13 @@ const defaultTransition = {
 }
 
 export default function TransitionTable({ transitions, setTransitions, editorIsLocked, activeTransitionID }) {
-  const [counter, setCounter] = useState(2)
+  const [counter, setCounter] = useState(0)
 
   const newRow = () => {
     const transition = structuredClone(defaultTransition)
     transition.id = counter
     setTransitions([...transitions, transition])
-    setCounter(counter + 1)
+    setCounter(counter => counter + 1)
   }
 
   const deleteRow = (id) => {

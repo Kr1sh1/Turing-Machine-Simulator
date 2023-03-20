@@ -9,10 +9,22 @@ export default function Home() {
 
   const itemClicked = (item) => {
     if (item) {
-      navigate("machines", {state: item})
+      navigate("machines", {state: {item}})
     } else {
       setExampleDialogOpen(false)
     }
+  }
+
+  const loadFile = (event) => {
+    const fileReader = new FileReader()
+    const file = event.target.files[0]
+
+    fileReader.onload = (event) => {
+      const machine = JSON.parse(event.target.result)
+      navigate("machines", { state: {item: {description: file.name, machine }} })
+    }
+
+    fileReader.readAsText(file)
   }
 
   return (
@@ -35,12 +47,17 @@ export default function Home() {
           onClick={() => setExampleDialogOpen(true)}
         >Load an example</Button>
 
-        <Button variant='contained' sx={{
-          right: "0",
-          top: "0",
-          }}
-          onClick={() => navigate("somewhere")}
-        >Load a file</Button>
+        <input
+          hidden
+          id="file-input"
+          type="file"
+          onChange={loadFile}
+        />
+        <label htmlFor="file-input">
+          <Button variant="contained" component="span">
+            Load from file
+          </Button>
+        </label>
 
         <Button variant='contained' sx={{
           left: "calc(50% - 75px)",

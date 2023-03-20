@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Snackbar } from "@mui/material";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import StateSelection from "./MachineComponents/StateSelection";
 import TransitionTable from "./MachineComponents/TransitionTable";
 import { StateType } from "../Enums";
@@ -12,6 +12,7 @@ export default memo(function Machine({
     defaultSelections = null,
     defaultOneWayInfiniteTape = true,
     defaultHaltingState = true,
+    setActiveMachine,
   }) {
 
   const [transitions, setTransitions] = useState(defaultTransitions)
@@ -25,6 +26,10 @@ export default memo(function Machine({
   const [activeTransitionID, setActiveTransitionID] = useState(-1)
   const [oneWayInfiniteTape, setOneWayInfiniteTape] = useState(defaultOneWayInfiniteTape)
   const [haltingState, setHaltingState] = useState(defaultHaltingState)
+
+  useEffect(() => {
+    setActiveMachine({transitions, selections, oneWayInfiniteTape, haltingState})
+  }, [transitions, selections, oneWayInfiniteTape, haltingState, setActiveMachine])
 
   const uniqueStates = new Set(
     transitions.reduce(

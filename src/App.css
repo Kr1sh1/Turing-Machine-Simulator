@@ -33,7 +33,7 @@ html, body {
   height: 99%;
 }
 
-.homeButtons button {
+.homeButtons button, .homeButtons span {
   aspect-ratio: 1 / 1;
   width: 150px;
   border-radius: 50%;
