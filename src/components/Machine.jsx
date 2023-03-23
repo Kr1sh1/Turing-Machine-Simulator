@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Snackbar } from "@mui/material";
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import { memo, useEffect, useState } from "react";
 import StateSelection from "./MachineComponents/StateSelection";
 import TransitionTable from "./MachineComponents/TransitionTable";
@@ -6,6 +6,7 @@ import { StateType } from "../Enums";
 import Simulator from "./Simulator";
 import { Lock, LockOpen } from "@mui/icons-material";
 import { Stack } from "@mui/system";
+import { SnackbarProvider, enqueueSnackbar } from 'notistack'
 
 export default memo(function Machine({
     defaultTransitions = [],
@@ -61,9 +62,11 @@ export default memo(function Machine({
       const halting = [selections[StateType.ACCEPT], selections[StateType.REJECT], selections[StateType.HALT]]
       const invalids = transitions.filter(invalidTransition)
       const haltHasExit = transitions.find(transition => halting.includes(transition.state))
-      if (initSet && invalids.length === 0 && !haltHasExit) {
-        setEditorIsLocked(!editorIsLocked)
-      }
+
+      if (!initSet) enqueueSnackbar("Initial state not set.", {variant: "error"})
+      else if (invalids.length !== 0) enqueueSnackbar("State cannot be blank in transitions.", {variant: "error"})
+      else if (haltHasExit) enqueueSnackbar("Terminal state cannot have exit transitions.", {variant: "error"})
+      else setEditorIsLocked(!editorIsLocked)
     }
   }
 
@@ -89,7 +92,7 @@ export default memo(function Machine({
 
   return (
     <>
-    <Snackbar />
+    <SnackbarProvider maxSnack={1} />
 
     <Box sx={{ display: "flex", flexDirection: "column", flexGrow: "1" }}>
       <Box sx={{ display: "flex", marginBottom: "1px", maxHeight: "273px" }}>
