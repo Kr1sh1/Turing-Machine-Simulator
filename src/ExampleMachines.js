@@ -55,13 +55,16 @@ const binaryDivisibleBy3 = makeMachine(
   false,
 )
 
-export const examples = [
-  {
-    machine: incrementBinary,
-    description: "Increment a binary number by 1"
-  },
+export const oneWayTapeExamples = [
   {
     machine: binaryDivisibleBy3,
     description: "Accept if a binary number is divisible by 3"
+  },
+]
+
+export const twoWayTapeExamples = [
+  {
+    machine: incrementBinary,
+    description: "Increment a binary number by 1"
   },
 ]
