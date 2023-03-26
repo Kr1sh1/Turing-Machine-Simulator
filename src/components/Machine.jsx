@@ -60,21 +60,18 @@ export default memo(function Machine({
     } else {
       const initSet = selections[StateType.INITIAL] !== ""
       const halting = [selections[StateType.ACCEPT], selections[StateType.REJECT], selections[StateType.HALT]]
-      const invalids = transitions.filter(invalidTransition)
+      const invalids = transitions.some(invalidTransition)
       const haltHasExit = transitions.find(transition => halting.includes(transition.state))
 
       if (!initSet) enqueueSnackbar("Initial state not set.", {variant: "error"})
-      else if (invalids.length !== 0) enqueueSnackbar("State cannot be blank in transitions.", {variant: "error"})
+      else if (invalids) enqueueSnackbar("Transitions cannot have blank characters.", {variant: "error"})
       else if (haltHasExit) enqueueSnackbar("Terminal state cannot have exit transitions.", {variant: "error"})
       else setEditorIsLocked(!editorIsLocked)
     }
   }
 
   const invalidTransition = (transition) => {
-    return (
-      transition.state === "" ||
-      transition.nextState === ""
-    )
+    return [transition.state, transition.read, transition.write, transition.nextState].some(input => input.length === 0)
   }
 
   const handleStateTypeChange = (isHalting) => {

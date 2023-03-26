@@ -1,3 +1,4 @@
+import { emptyCellCharacter } from "./Constants"
 import { MoveDirection, StateType } from "./Enums"
 
 function makeMachine(transitions, selections, oneWayInfiniteTape, haltingState) {
@@ -20,10 +21,10 @@ const incrementBinary = makeMachine(
   [
     makeTransition(0, "S0", "1", "1", MoveDirection.RIGHT, "S0"),
     makeTransition(1, "S0", "0", "0", MoveDirection.RIGHT, "S0"),
-    makeTransition(2, "S0", "", "", MoveDirection.LEFT, "S1"),
+    makeTransition(2, "S0", emptyCellCharacter, emptyCellCharacter, MoveDirection.LEFT, "S1"),
     makeTransition(3, "S1", "0", "1", MoveDirection.LEFT, "Halt"),
     makeTransition(4, "S1", "1", "0", MoveDirection.LEFT, "S1"),
-    makeTransition(5, "S1", "", "1", MoveDirection.LEFT, "Halt"),
+    makeTransition(5, "S1", emptyCellCharacter, "1", MoveDirection.LEFT, "Halt"),
   ],
   {
     [StateType.INITIAL]: "S0",
@@ -39,7 +40,7 @@ const binaryDivisibleBy3 = makeMachine(
   [
     makeTransition(0, "S0", "1", "1", MoveDirection.RIGHT, "S1"),
     makeTransition(1, "S0", "0", "0", MoveDirection.RIGHT, "S0"),
-    makeTransition(2, "S0", "", "", MoveDirection.RIGHT, "Accept"),
+    makeTransition(2, "S0", emptyCellCharacter, emptyCellCharacter, MoveDirection.RIGHT, "Accept"),
     makeTransition(3, "S1", "0", "0", MoveDirection.RIGHT, "S2"),
     makeTransition(4, "S1", "1", "1", MoveDirection.RIGHT, "S0"),
     makeTransition(5, "S2", "0", "0", MoveDirection.RIGHT, "S1"),

@@ -1,4 +1,5 @@
 import { useCallback, useRef } from "react";
+import { emptyCellCharacter } from "../Constants";
 
 export default function useTape(oneWayInfiniteTape) {
   const forwardTape = useRef([])
@@ -6,13 +7,13 @@ export default function useTape(oneWayInfiniteTape) {
 
   const oneWayTapeReadCell = useCallback((readIndex) => {
     if (readIndex < 0) throw new Error("Invalid Read: Negative indices are invalid for one-way infinite tape")
-    if (readIndex >= forwardTape.current.length) return ""
+    if (readIndex >= forwardTape.current.length) return emptyCellCharacter
     return forwardTape.current[readIndex]
   }, [])
 
   const twoWayTapeReadCell = useCallback((readIndex) => {
     if (readIndex < 0) {
-      if (-(readIndex + 1) >= backwardTape.current.length) return ""
+      if (-(readIndex + 1) >= backwardTape.current.length) return emptyCellCharacter
       return backwardTape.current[-(readIndex + 1)]
     }
 

@@ -7,12 +7,13 @@ import {
 import { useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear"
 import { MoveDirection } from "../../Enums";
+import { emptyCellCharacter } from "../../Constants";
 
 const defaultTransition = {
   id: 0,
   state: "",
-  read: "",
-  write: "",
+  read: emptyCellCharacter,
+  write: emptyCellCharacter,
   move: MoveDirection.RIGHT,
   nextState: "",
 }
