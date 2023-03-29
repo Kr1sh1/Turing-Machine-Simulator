@@ -9,6 +9,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { SimulatorState, StateType } from "../Enums";
 import TransitionSelection from "./MachineComponents/TransitionSelection";
 import { enqueueSnackbar } from "notistack";
+import { leftEndMarker } from "../Constants";
 
 const makeNode = (id, state) => {
   return {
@@ -185,7 +186,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
   }
 
   const resetPressed = () => {
-    if (initialValue.includes("£")) {
+    if (initialValue.includes(leftEndMarker)) {
       enqueueSnackbar("Initial value cannot contain left-end marker", {variant: "error"})
       return
     }

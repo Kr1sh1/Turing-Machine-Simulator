@@ -1,4 +1,5 @@
 import { useCallback, useRef } from "react"
+import { leftEndMarker } from "../Constants"
 import { MoveDirection, StateType } from "../Enums"
 import useTape from "./useTape"
 
@@ -51,7 +52,7 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
 
   const reset = useCallback((initialValue = lastInitialValue.current) => {
     setTape({
-      forwardTape: oneWayInfiniteTape ? ["£", ...initialValue] : [...initialValue],
+      forwardTape: oneWayInfiniteTape ? [leftEndMarker, ...initialValue] : [...initialValue],
       backwardTape: oneWayInfiniteTape ? null : []
     })
     headPosition.current = oneWayInfiniteTape ? 1 : 0

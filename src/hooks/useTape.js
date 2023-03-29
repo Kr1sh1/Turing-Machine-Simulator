@@ -1,8 +1,8 @@
 import { useCallback, useRef } from "react";
-import { emptyCellCharacter } from "../Constants";
+import { emptyCellCharacter, leftEndMarker } from "../Constants";
 
 export default function useTape(oneWayInfiniteTape) {
-  const forwardTape = useRef(oneWayInfiniteTape ? ["£"] : [])
+  const forwardTape = useRef(oneWayInfiniteTape ? [leftEndMarker] : [])
   const backwardTape = useRef(oneWayInfiniteTape ? null : [])
 
   const oneWayTapeReadCell = useCallback((readIndex) => {

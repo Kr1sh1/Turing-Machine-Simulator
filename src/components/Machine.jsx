@@ -8,6 +8,7 @@ import { Lock, LockOpen } from "@mui/icons-material";
 import { Stack } from "@mui/system";
 import { SnackbarProvider, enqueueSnackbar } from 'notistack'
 import { MoveDirection } from "../Enums";
+import { leftEndMarker } from "../Constants";
 
 export default memo(function Machine({
     defaultTransitions = [],
@@ -80,12 +81,12 @@ export default memo(function Machine({
   }
 
   const invalidMarkerWrite = (transition) => {
-    if (transition.read === "£") return transition.write !== "£"
-    else return transition.write === "£"
+    if (transition.read === leftEndMarker) return transition.write !== leftEndMarker
+    else return transition.write === leftEndMarker
   }
 
   const invalidMarkerMove = (transition) => {
-    return transition.read === "£" && transition.move !== MoveDirection.RIGHT
+    return transition.read === leftEndMarker && transition.move !== MoveDirection.RIGHT
   }
 
   const handleStateTypeChange = (isHalting) => {
