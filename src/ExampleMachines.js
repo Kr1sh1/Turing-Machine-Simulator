@@ -1,4 +1,4 @@
-import { emptyCellCharacter } from "./Constants"
+import { emptyCellCharacter, leftEndMarker } from "./Constants"
 import { MoveDirection, StateType } from "./Enums"
 
 function makeMachine(transitions, selections, oneWayInfiniteTape, haltingState) {
@@ -42,7 +42,7 @@ const incrementBinaryOneWay = makeMachine(
     makeTransition(2, "S0", emptyCellCharacter, emptyCellCharacter, MoveDirection.LEFT, "S1"),
     makeTransition(3, "S1", "0", "1", MoveDirection.STAY, "Halt"),
     makeTransition(4, "S1", "1", "0", MoveDirection.LEFT, "S1"),
-    makeTransition(5, "S1", "£", "£", MoveDirection.RIGHT, "S2"),
+    makeTransition(5, "S1", leftEndMarker, leftEndMarker, MoveDirection.RIGHT, "S2"),
     makeTransition(6, "S2", "0", "1", MoveDirection.RIGHT, "S3"),
     makeTransition(7, "S3", "0", "0", MoveDirection.RIGHT, "S3"),
     makeTransition(8, "S3", emptyCellCharacter, "0", MoveDirection.STAY, "Halt"),
