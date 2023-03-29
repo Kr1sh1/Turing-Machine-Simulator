@@ -60,18 +60,25 @@ export default memo(function Machine({
     } else {
       const initSet = selections[StateType.INITIAL] !== ""
       const halting = [selections[StateType.ACCEPT], selections[StateType.REJECT], selections[StateType.HALT]]
-      const invalids = transitions.some(invalidTransition)
+      const blanks = transitions.some(blankTransition)
+      const badMarker = transitions.some(invalidMarker)
       const haltHasExit = transitions.find(transition => halting.includes(transition.state))
 
       if (!initSet) enqueueSnackbar("Initial state not set.", {variant: "error"})
-      else if (invalids) enqueueSnackbar("Transitions cannot have blank characters.", {variant: "error"})
+      else if (blanks) enqueueSnackbar("Transitions cannot have blank characters.", {variant: "error"})
+      else if (badMarker) enqueueSnackbar("Left-end marker cannot be overwritten or written elsewhere.", {variant: "error"})
       else if (haltHasExit) enqueueSnackbar("Terminal state cannot have exit transitions.", {variant: "error"})
       else setEditorIsLocked(!editorIsLocked)
     }
   }
 
-  const invalidTransition = (transition) => {
+  const blankTransition = (transition) => {
     return [transition.state, transition.read, transition.write, transition.nextState].some(input => input.length === 0)
+  }
+
+  const invalidMarker = (transition) => {
+    if (transition.read === "£") return transition.write !== "£"
+    else return transition.write === "£"
   }
 
   const handleStateTypeChange = (isHalting) => {

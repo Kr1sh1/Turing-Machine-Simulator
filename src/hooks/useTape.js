@@ -2,7 +2,7 @@ import { useCallback, useRef } from "react";
 import { emptyCellCharacter } from "../Constants";
 
 export default function useTape(oneWayInfiniteTape) {
-  const forwardTape = useRef([])
+  const forwardTape = useRef(oneWayInfiniteTape ? ["£"] : [])
   const backwardTape = useRef(oneWayInfiniteTape ? null : [])
 
   const oneWayTapeReadCell = useCallback((readIndex) => {
@@ -31,6 +31,7 @@ export default function useTape(oneWayInfiniteTape) {
   const oneWayTapeWriteCell = useCallback((writeIndex, value) => {
     if (writeIndex < 0) throw new Error("Invalid Write: Negative indices are invalid for one-way infinite tape")
     if (writeIndex > forwardTape.current.length) throw new Error("Invalid Write: Must write linearly")
+    if (writeIndex === 0) return
 
     if (writeIndex === forwardTape.current.length) forwardTape.current.push(value)
     else forwardTape.current[writeIndex] = value

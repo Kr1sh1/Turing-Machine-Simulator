@@ -4,7 +4,7 @@ import useTape from "./useTape"
 
 export default function useTuringMachine(selections, transitions, oneWayInfiniteTape) {
   const state = useRef(selections[StateType.INITIAL])
-  const headPosition = useRef(0)
+  const headPosition = useRef(oneWayInfiniteTape ? 1 : 0)
   const [getCenteredSlice, readCell, writeCell, setTape, getTape] = useTape(oneWayInfiniteTape)
   const lastInitialValue = useRef("")
 
@@ -20,8 +20,14 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
       transition => transition.id === transitionId
     )
 
-    writeCell(headPosition.current, transition.write)
     state.current = transition.nextState
+
+    if (oneWayInfiniteTape && headPosition.current === 0) {
+      headPosition.current += 1
+      return
+    }
+
+    writeCell(headPosition.current, transition.write)
 
     switch (transition.move) {
       case MoveDirection.LEFT:
@@ -45,10 +51,10 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
 
   const reset = useCallback((initialValue = lastInitialValue.current) => {
     setTape({
-      forwardTape: [...initialValue],
+      forwardTape: oneWayInfiniteTape ? ["£", ...initialValue] : [...initialValue],
       backwardTape: oneWayInfiniteTape ? null : []
     })
-    headPosition.current = 0
+    headPosition.current = oneWayInfiniteTape ? 1 : 0
     state.current = selections[StateType.INITIAL]
     lastInitialValue.current = initialValue
   }, [setTape, oneWayInfiniteTape, selections])

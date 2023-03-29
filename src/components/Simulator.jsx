@@ -8,6 +8,7 @@ import useTuringMachine from "../hooks/useTuringMachine";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { SimulatorState, StateType } from "../Enums";
 import TransitionSelection from "./MachineComponents/TransitionSelection";
+import { enqueueSnackbar, SnackbarProvider } from "notistack";
 
 const makeNode = (id, state) => {
   return {
@@ -184,6 +185,10 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
   }
 
   const resetPressed = () => {
+    if (initialValue.includes("£")) {
+      enqueueSnackbar("Initial value cannot contain left-end marker", {variant: "error"})
+      return
+    }
     stopPressed()
     setActiveTransitionID(-1)
     reset(initialValue)
@@ -206,6 +211,9 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
   }
 
   return (
+    <>
+    <SnackbarProvider maxSnack={1} />
+
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <Box sx={{ display: "flex" }}>
         <Box className="component" sx={{ padding: "10px", backgroundColor: "whitesmoke", marginRight: "1px" }}>
@@ -248,5 +256,6 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
           pickRandom={pickRandom} />
       </Box>
     </Box>
+    </>
   )
 })
