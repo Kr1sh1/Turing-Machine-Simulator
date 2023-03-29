@@ -7,6 +7,7 @@ import Simulator from "./Simulator";
 import { Lock, LockOpen } from "@mui/icons-material";
 import { Stack } from "@mui/system";
 import { SnackbarProvider, enqueueSnackbar } from 'notistack'
+import { MoveDirection } from "../Enums";
 
 export default memo(function Machine({
     defaultTransitions = [],
@@ -61,12 +62,14 @@ export default memo(function Machine({
       const initSet = selections[StateType.INITIAL] !== ""
       const halting = [selections[StateType.ACCEPT], selections[StateType.REJECT], selections[StateType.HALT]]
       const blanks = transitions.some(blankTransition)
-      const badMarker = transitions.some(invalidMarker)
+      const badMarkerWrite = transitions.some(invalidMarkerWrite)
+      const badMarkerMove = transitions.some(invalidMarkerMove)
       const haltHasExit = transitions.find(transition => halting.includes(transition.state))
 
       if (!initSet) enqueueSnackbar("Initial state not set.", {variant: "error"})
       else if (blanks) enqueueSnackbar("Transitions cannot have blank characters.", {variant: "error"})
-      else if (badMarker) enqueueSnackbar("Left-end marker cannot be overwritten or written elsewhere.", {variant: "error"})
+      else if (badMarkerWrite) enqueueSnackbar("Left-end marker cannot be overwritten or written elsewhere.", {variant: "error"})
+      else if (badMarkerMove) enqueueSnackbar("Must move right when reading left-end marker", {variant: "error"})
       else if (haltHasExit) enqueueSnackbar("Terminal state cannot have exit transitions.", {variant: "error"})
       else setEditorIsLocked(!editorIsLocked)
     }
@@ -76,9 +79,13 @@ export default memo(function Machine({
     return [transition.state, transition.read, transition.write, transition.nextState].some(input => input.length === 0)
   }
 
-  const invalidMarker = (transition) => {
+  const invalidMarkerWrite = (transition) => {
     if (transition.read === "£") return transition.write !== "£"
     else return transition.write === "£"
+  }
+
+  const invalidMarkerMove = (transition) => {
+    return transition.read === "£" && transition.move !== MoveDirection.RIGHT
   }
 
   const handleStateTypeChange = (isHalting) => {

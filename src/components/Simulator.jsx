@@ -212,8 +212,6 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
 
   return (
     <>
-    <SnackbarProvider maxSnack={1} />
-
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <Box sx={{ display: "flex" }}>
         <Box className="component" sx={{ padding: "10px", backgroundColor: "whitesmoke", marginRight: "1px" }}>
