@@ -8,7 +8,7 @@ import useTuringMachine from "../hooks/useTuringMachine";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { SimulatorState, StateType } from "../Enums";
 import TransitionSelection from "./MachineComponents/TransitionSelection";
-import { enqueueSnackbar, SnackbarProvider } from "notistack";
+import { enqueueSnackbar } from "notistack";
 
 const makeNode = (id, state) => {
   return {

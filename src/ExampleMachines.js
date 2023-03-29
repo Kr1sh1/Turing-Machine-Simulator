@@ -16,8 +16,7 @@ function makeTransition(id, state, read, write, move, nextState) {
   }
 }
 
-// Examples from https://turingmachine.io/
-const incrementBinary = makeMachine(
+const incrementBinaryTwoWay = makeMachine(
   [
     makeTransition(0, "S0", "1", "1", MoveDirection.RIGHT, "S0"),
     makeTransition(1, "S0", "0", "0", MoveDirection.RIGHT, "S0"),
@@ -33,6 +32,28 @@ const incrementBinary = makeMachine(
     [StateType.REJECT]: "",
   },
   false,
+  true,
+)
+
+const incrementBinaryOneWay = makeMachine(
+  [
+    makeTransition(0, "S0", "1", "1", MoveDirection.RIGHT, "S0"),
+    makeTransition(1, "S0", "0", "0", MoveDirection.RIGHT, "S0"),
+    makeTransition(2, "S0", emptyCellCharacter, emptyCellCharacter, MoveDirection.LEFT, "S1"),
+    makeTransition(3, "S1", "0", "1", MoveDirection.STAY, "Halt"),
+    makeTransition(4, "S1", "1", "0", MoveDirection.LEFT, "S1"),
+    makeTransition(5, "S1", "£", "£", MoveDirection.RIGHT, "S2"),
+    makeTransition(6, "S2", "0", "1", MoveDirection.RIGHT, "S3"),
+    makeTransition(7, "S3", "0", "0", MoveDirection.RIGHT, "S3"),
+    makeTransition(8, "S3", emptyCellCharacter, "0", MoveDirection.STAY, "Halt"),
+  ],
+  {
+    [StateType.INITIAL]: "S0",
+    [StateType.HALT]: "Halt",
+    [StateType.ACCEPT]: "",
+    [StateType.REJECT]: "",
+  },
+  true,
   true,
 )
 
@@ -61,11 +82,15 @@ export const oneWayTapeExamples = [
     machine: binaryDivisibleBy3,
     description: "Accept if a binary number is divisible by 3"
   },
+  {
+    machine: incrementBinaryOneWay,
+    description: "Increment a binary number by 1"
+  },
 ]
 
 export const twoWayTapeExamples = [
   {
-    machine: incrementBinary,
+    machine: incrementBinaryTwoWay,
     description: "Increment a binary number by 1"
   },
 ]
