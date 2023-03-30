@@ -126,7 +126,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
       default:
         if (getChildren().length === 0) {
           changeActiveNodeClass("nondetNode")
-          setNumComputationsDiscovered(num => num + availableTransitions.length)
+          setNumComputationsDiscovered(num => num + availableTransitions.length - 1)
         }
 
         if (alwaysPickRandomly) pickRandom(availableTransitions)
@@ -202,6 +202,9 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
       enqueueSnackbar("Initial value cannot contain left-end marker", {variant: "error"})
       return
     }
+    setAcceptingComputationFound(false)
+    setNumComputationsDiscovered(1)
+    setNumComputationsTerminated(0)
     stopPressed()
     setActiveTransitionID(-1)
     reset(initialValue)
