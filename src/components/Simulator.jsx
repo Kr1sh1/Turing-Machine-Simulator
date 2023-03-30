@@ -10,6 +10,8 @@ import { SimulatorState, StateType } from "../Enums";
 import TransitionSelection from "./MachineComponents/TransitionSelection";
 import { enqueueSnackbar } from "notistack";
 import { leftEndMarker } from "../Constants";
+import Status2 from "./MachineComponents/Status2";
+import { MoveDirection } from "../Enums";
 
 const makeNode = (id, state) => {
   return {
@@ -22,13 +24,24 @@ const makeNode = (id, state) => {
   }
 }
 
-const makeEdge = (id, source, target) => {
+const makeEdge = (id, source, target, label) => {
   return {
     id: `${id}`,
     source: `${source}`,
     target: `${target}`,
     animated: true,
+    label: label,
+    type: "straight"
   }
+}
+
+const makeEdgeLabel = (transition) => {
+  const translateDirection = {
+    [MoveDirection.RIGHT]: ">",
+    [MoveDirection.LEFT]: "<",
+    [MoveDirection.STAY]: "|",
+  }
+  return "Write: " + transition.write + " Move: " + translateDirection[transition.move]
 }
 
 const makeLabel = (state) => {
@@ -108,15 +121,16 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
         setActiveTransitionID(-1)
         return
       case 1:
-        setActiveTransitionID(availableTransitions[0].id)
-        performTransition(availableTransitions[0].id)
+        const transition = availableTransitions[0]
+        setActiveTransitionID(transition.id)
+        performTransition(transition.id)
         const children = getChildren()
         let nextNodeId = undefined
         if (children.length === 0) {
           const newNode = makeNode(counter.current, `${getConfiguration().state}`)
           nextNodeId = newNode.id
-          setNodes([...nodes, {...newNode, data: {...newNode.data, transitionId: availableTransitions[0].id}}])
-          setEdges([...edges, makeEdge(counter.current + 1, activeNodeId, newNode.id)])
+          setNodes([...nodes, {...newNode, data: {...newNode.data, transitionId: transition.id}}])
+          setEdges([...edges, makeEdge(counter.current + 1, activeNodeId, newNode.id, makeEdgeLabel(transition))])
           counter.current += 2
         } else {
           nextNodeId = children[0].id
@@ -167,7 +181,8 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
       const newNode = makeNode(counter.current, `${getConfiguration().state}`)
       nextNodeId = newNode.id
       setNodes([...nodes, {...newNode, data: {...newNode.data, transitionId: id}}])
-      setEdges([...edges, makeEdge(counter.current + 1, activeNodeId, newNode.id)])
+      const transition = transitions.find(transition => transition.id === id)
+      setEdges([...edges, makeEdge(counter.current + 1, activeNodeId, newNode.id, makeEdgeLabel(transition))])
       counter.current += 2
     } else {
       nextNodeId = child.id

@@ -5,7 +5,7 @@ import 'reactflow/dist/style.css';
 import { SimulatorState } from '../../Enums';
 import { Box } from '@mui/material';
 
-const nodeWidth = 150
+const nodeWidth = 200
 const nodeHeight = 46
 
 export default memo(function ComputationTree({ rawNodes, rawEdges, activeNodeId, simulatorStatus, nodeClicked }) {
