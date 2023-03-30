@@ -1,7 +1,9 @@
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import NavigationIcon from '@mui/icons-material/Navigation'
-import { Box, Paper } from '@mui/material'
+import { Box, IconButton, Paper, Tooltip } from '@mui/material'
 import { memo, useLayoutEffect, useRef, useState } from 'react'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { enqueueSnackbar } from 'notistack';
 
 export default memo(function Tape({ configuration, getCenteredSlice }) {
   const [parent] = useAutoAnimate( {
@@ -9,6 +11,19 @@ export default memo(function Tape({ configuration, getCenteredSlice }) {
   } )
   const [tapeWidth, setTapeWidth] = useState(0)
   const container = useRef()
+
+  const copyToClipboard = () => {
+    let text = ""
+    if (!configuration.tape.backwardTape) {
+      text += configuration.tape.forwardTape.slice(1).join("")
+    } else {
+      text += structuredClone(configuration.tape.backwardTape).reverse().join("") + configuration.tape.forwardTape.join("")
+    }
+    text = text.replaceAll(/^_+|_+$/g, "")
+    navigator.clipboard.writeText(text).then(
+      () => enqueueSnackbar("Tape contents copied to clipboard", { variant: "success" })
+    )
+  }
   
   const cellSize = "50px"
 
@@ -53,13 +68,20 @@ export default memo(function Tape({ configuration, getCenteredSlice }) {
     ))
 
   return (
-    <Box sx={{ textAlign: "center", alignSelf: "center", width: "100%" }} ref={container}>
-      Current State: {configuration.state}
-      <br></br><br />
-      <Box ref={parent} sx={{ display: "flex", justifyContent: "center" }}>
-        {cells}
+    <Box sx={{ textAlign: "center", alignSelf: "center", width: "100%", position: "relative", height: "100%", display: "flex", alignItems: "center" }} ref={container}>
+      <Box sx={{ width: "100%" }}>
+        Current State: {configuration.state}
+        <br></br><br />
+        <Box ref={parent} sx={{ display: "flex", justifyContent: "center" }}>
+          {cells}
+        </Box>
+        <NavigationIcon />
       </Box>
-      <NavigationIcon />
+      <Tooltip title="Copy tape contents" placement="bottom">
+        <IconButton onClick={copyToClipboard} sx={{ position: "absolute", top: "5px", right: "5px" }}>
+          <ContentCopyIcon />
+        </IconButton>
+      </Tooltip>
     </Box>
   )
 })
