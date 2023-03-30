@@ -1,13 +1,14 @@
 import { Box, Typography } from "@mui/material";
 
-export default function Status2({ numComputationsDiscovered, numComputationsTerminated, acceptingComputationFound }) {
+export default function Status({ numComputationsDiscovered, numComputationsTerminated, acceptingComputationFound, haltingState }) {
   let color = "grey"
   let subtext = null
   let status = null
 
-  console.log(acceptingComputationFound)
-
-  if (acceptingComputationFound) {
+  if (haltingState && numComputationsTerminated > 0) {
+    color = "blue"
+    status = "Terminable"
+  } else if (acceptingComputationFound) {
     color = "greenyellow"
     status = "Input Accepted"
     subtext = "Accepting Computation Found"
