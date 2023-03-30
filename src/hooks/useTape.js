@@ -31,7 +31,6 @@ export default function useTape(oneWayInfiniteTape) {
   const oneWayTapeWriteCell = useCallback((writeIndex, value) => {
     if (writeIndex < 0) throw new Error("Invalid Write: Negative indices are invalid for one-way infinite tape")
     if (writeIndex > forwardTape.current.length) throw new Error("Invalid Write: Must write linearly")
-    if (writeIndex === 0) return
 
     if (writeIndex === forwardTape.current.length) forwardTape.current.push(value)
     else forwardTape.current[writeIndex] = value
