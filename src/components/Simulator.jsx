@@ -98,11 +98,12 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
     }
 
     const availableTransitions = getTransitions()
+    const currentNode = nodes.find(node => node.id === activeNodeId)
+    const visited = currentNode.type === "output" || currentNode.className === "nondetNode"
     switch (availableTransitions.length) {
       case 0:
         setSimulatorStatus(SimulatorState.TERMINATED)
 
-        const visited = nodes.find(node => node.id === activeNodeId).type === "output"
         if (!visited) {
           let className = undefined
           if (haltingState) className = "haltNode"
@@ -137,7 +138,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
         setActiveNodeId(nextNodeId)
         break
       default:
-        if (getChildren().length === 0) {
+        if (!visited) {
           changeActiveNodeClass("nondetNode")
           setNumComputationsDiscovered(num => num + availableTransitions.length - 1)
         }
