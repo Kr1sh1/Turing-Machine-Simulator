@@ -10,7 +10,6 @@ import { SimulatorState, StateType } from "../Enums";
 import TransitionSelection from "./MachineComponents/TransitionSelection";
 import { enqueueSnackbar } from "notistack";
 import { leftEndMarker } from "../Constants";
-import Status2 from "./MachineComponents/Status2";
 import { MoveDirection } from "../Enums";
 
 const makeNode = (id, state) => {
@@ -253,12 +252,7 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
             setInitialValue={setInitialValue}
             setSpeed={setSpeed}
             simulatorStatus={simulatorStatus} />
-          {/* <Status
-            simulatorStatus={simulatorStatus}
-            currentState={getConfiguration().state}
-            selections={selections}
-            haltingState={haltingState} /> */}
-          <Status2
+          <Status
             numComputationsDiscovered={numComputationsDiscovered}
             numComputationsTerminated={numComputationsTerminated}
             acceptingComputationFound={acceptingComputationFound} />

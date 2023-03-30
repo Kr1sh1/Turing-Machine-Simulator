@@ -1,29 +1,29 @@
 import { Box, Typography } from "@mui/material";
-import { SimulatorState, StateType } from "../../Enums";
 
-export default function Status({ simulatorStatus, currentState, selections, haltingState }) {
+export default function Status2({ numComputationsDiscovered, numComputationsTerminated, acceptingComputationFound }) {
   let color = "grey"
   let subtext = null
+  let status = null
 
-  if (simulatorStatus === SimulatorState.TERMINATED) {
-    if (haltingState) color = "blue"
-    else switch (currentState) {
-      case selections[StateType.ACCEPT]:
-        color = "greenyellow"
-        subtext = "Input Accepted"
-        break;
+  console.log(acceptingComputationFound)
 
-      default:
-        color = "red"
-        subtext = "Input Rejected"
-        break;
-    }
+  if (acceptingComputationFound) {
+    color = "greenyellow"
+    status = "Input Accepted"
+    subtext = "Accepting Computation Found"
+  } else if (numComputationsDiscovered === numComputationsTerminated) {
+    color = "red"
+    status = "Input Rejected"
+    subtext = "No Accepting Computation Found"
+  } else {
+    status = "Unknown"
+    subtext = `${numComputationsTerminated} of ${numComputationsDiscovered} computations fully explored`
   }
 
   return (
-    <Box className={simulatorStatus} sx={{ display: "flex", flexDirection: "column", marginTop: "10px", color: "white", borderRadius: "10px", height: "4em", width: "100%", backgroundColor: color, justifyContent: "center", textAlign: "center" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", marginTop: "10px", color: "white", borderRadius: "10px", height: "4em", width: "100%", backgroundColor: color, justifyContent: "center", textAlign: "center" }}>
       <Typography variant="h5">
-        {simulatorStatus}
+        Status: {status}
       </Typography>
       {subtext &&
         <Typography variant="caption">
