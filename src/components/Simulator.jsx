@@ -49,6 +49,9 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
   const [activeNodeId, setActiveNodeId] = useState("0")
   const [availableTransitions, setAvailableTransitions] = useState([])
   const [alwaysPickRandomly, setAlwaysPickRandomly] = useState(false)
+  const [numComputationsDiscovered, setNumComputationsDiscovered] = useState(1)
+  const [numComputationsTerminated, setNumComputationsTerminated] = useState(0)
+  const [acceptingComputationFound, setAcceptingComputationFound] = useState(false)
   const [
     getCenteredSlice,
     getConfiguration,
@@ -61,7 +64,6 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
     if (simulatorStatus !== SimulatorState.RUNNING) return
 
     const changeActiveNodeClass = (className) => {
-      if (nodes.find(node => node.id === activeNodeId).className === className) return
       setNodes(nodes =>
         nodes.map(node => {
           if (node.id === activeNodeId) {
@@ -73,7 +75,6 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
     }
 
     const changeActiveNodeType = (type) => {
-      if (nodes.find(node => node.id === activeNodeId).type === type) return
       setNodes(nodes =>
         nodes.map(node => {
           if (node.id === activeNodeId) {
@@ -88,13 +89,21 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
     switch (availableTransitions.length) {
       case 0:
         setSimulatorStatus(SimulatorState.TERMINATED)
-        let className = undefined
-        if (haltingState) className = "haltNode"
-        else if (getConfiguration().state === selections[StateType.ACCEPT]) className = "acceptNode"
-        else className = "rejectNode"
 
-        changeActiveNodeClass(className)
-        changeActiveNodeType("output")
+        const visited = nodes.find(node => node.id === activeNodeId).type === "output"
+        if (!visited) {
+          let className = undefined
+          if (haltingState) className = "haltNode"
+          else if (getConfiguration().state === selections[StateType.ACCEPT]) {
+            className = "acceptNode"
+            setAcceptingComputationFound(true)
+          }
+          else className = "rejectNode"
+
+          changeActiveNodeClass(className)
+          changeActiveNodeType("output")
+          setNumComputationsTerminated(num => num + 1)
+        }
 
         setActiveTransitionID(-1)
         return
@@ -115,7 +124,10 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
         setActiveNodeId(nextNodeId)
         break
       default:
-        changeActiveNodeClass("nondetNode")
+        if (getChildren().length === 0) {
+          changeActiveNodeClass("nondetNode")
+          setNumComputationsDiscovered(num => num + availableTransitions.length)
+        }
 
         if (alwaysPickRandomly) pickRandom(availableTransitions)
         else setAvailableTransitions(availableTransitions)
