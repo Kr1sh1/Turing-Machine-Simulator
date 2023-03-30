@@ -253,11 +253,15 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
             setInitialValue={setInitialValue}
             setSpeed={setSpeed}
             simulatorStatus={simulatorStatus} />
-          <Status
+          {/* <Status
             simulatorStatus={simulatorStatus}
             currentState={getConfiguration().state}
             selections={selections}
-            haltingState={haltingState} />
+            haltingState={haltingState} /> */}
+          <Status2
+            numComputationsDiscovered={numComputationsDiscovered}
+            numComputationsTerminated={numComputationsTerminated}
+            acceptingComputationFound={acceptingComputationFound} />
         </Box>
 
         <Box className="component" sx={{ display: "flex", flexGrow: "1", minWidth: "0", backgroundColor: "lightgreen" }}>
