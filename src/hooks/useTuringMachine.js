@@ -6,7 +6,7 @@ import useTape from "./useTape"
 export default function useTuringMachine(selections, transitions, oneWayInfiniteTape) {
   const state = useRef(selections[StateType.INITIAL])
   const headPosition = useRef(oneWayInfiniteTape ? 1 : 0)
-  const [getCenteredSlice, readCell, writeCell, setTape, getTape] = useTape(oneWayInfiniteTape, oneWayInfiniteTape ? "£" : "")
+  const [getCenteredSlice, readCell, writeCell, setTape, getTape] = useTape(oneWayInfiniteTape, oneWayInfiniteTape ? leftEndMarker : "")
   const lastInitialValue = useRef("")
 
   const getTransitions = useCallback(() => {
