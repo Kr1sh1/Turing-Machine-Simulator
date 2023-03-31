@@ -32,7 +32,7 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
 
     switch (transition.move) {
       case MoveDirection.LEFT:
-        if (!oneWayInfiniteTape || headPosition.current !== 0) headPosition.current -= 1
+        headPosition.current -= 1
         break
       case MoveDirection.RIGHT:
         headPosition.current += 1
