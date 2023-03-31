@@ -1,8 +1,8 @@
 import { useCallback, useRef } from "react";
-import { emptyCellCharacter, leftEndMarker } from "../Constants";
+import { emptyCellCharacter } from "../Constants";
 
-export default function useTape(oneWayInfiniteTape) {
-  const forwardTape = useRef(oneWayInfiniteTape ? [leftEndMarker] : [])
+export default function useTape(oneWayInfiniteTape, initialValue) {
+  const forwardTape = useRef([...initialValue])
   const backwardTape = useRef(oneWayInfiniteTape ? null : [])
 
   const oneWayTapeReadCell = useCallback((readIndex) => {
@@ -62,10 +62,10 @@ export default function useTape(oneWayInfiniteTape) {
     const slice = []
 
     for (let index = numberOfElementsOnLeftSide; index > 0; index--) {
-      slice.push({ value: readCell(headPosition - index), key: headPosition - index})
+      slice.push({ value: readCell(headPosition - index), key: headPosition - index })
     }
     for (let index = 0; index < numberOfElementsOnRightSide + 1; index++) {
-      slice.push({ value: readCell(index + headPosition), key: index + headPosition})
+      slice.push({ value: readCell(index + headPosition), key: index + headPosition })
     }
     return slice
   }, [readCell])
