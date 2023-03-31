@@ -1,8 +1,9 @@
 import {
-  Box, Button, IconButton, MenuItem,
+  Button, IconButton, MenuItem,
   Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow,
-  TextField } from "@mui/material";
+  TextField
+} from "@mui/material";
 
 import { useEffect, useRef } from "react";
 import ClearIcon from "@mui/icons-material/Clear"
@@ -20,9 +21,13 @@ const defaultTransition = {
 
 export default function TransitionTable({ transitions, setTransitions, editorIsLocked, activeTransitionID }) {
   const counter = useRef(null)
+  const activeRow = useRef(null)
 
   counter.current = Math.max(...transitions.map(t => t.id)) + 1
 
+  useEffect(() => {
+    if (activeTransitionID >= 0) activeRow.current.scrollIntoView({ behavior: "smooth", block: "center" })
+  }, [activeTransitionID])
 
   const newRow = () => {
     const transition = structuredClone(defaultTransition)
@@ -42,52 +47,53 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
   }
 
   return (
-    <Box className="component" sx={{ flexGrow: 1, minWidth: "0", padding: "10px", marginLeft: "1px", overflowY: "auto" }}>
-      <TableContainer>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">State</TableCell>
-              <TableCell align="center">Read</TableCell>
-              <TableCell align="center">Write</TableCell>
-              <TableCell align="center">Move</TableCell>
-              <TableCell align="center">Next State</TableCell>
-              <TableCell />
+    <TableContainer className="component" sx={{ flexGrow: 1, minWidth: "0", marginLeft: "1px" }}>
+      <Table stickyHeader size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell align="center">State</TableCell>
+            <TableCell align="center">Read</TableCell>
+            <TableCell align="center">Write</TableCell>
+            <TableCell align="center">Move</TableCell>
+            <TableCell align="center">Next State</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+
+        <TableBody>
+          {transitions.map(transition => (
+            <TableRow key={transition.id} ref={transition.id === activeTransitionID ? activeRow : null} sx={{ backgroundColor: transition.id === activeTransitionID ? "green" : "white" }}>
+              <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.state} onChange={event => transitionUpdate(event, transition.id, "state")} /></TableCell>
+              <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.read} onChange={event => transitionUpdate(event, transition.id, "read")} inputProps={{ maxLength: 1 }} /></TableCell>
+              <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.write} onChange={event => transitionUpdate(event, transition.id, "write")} inputProps={{ maxLength: 1 }} /></TableCell>
+
+              <TableCell align="center">
+                <TextField disabled={editorIsLocked} size="small" select value={transition.move} onChange={event => transitionUpdate(event, transition.id, "move")}>
+                  {Object.values(MoveDirection).map(move => (
+                    <MenuItem key={move} value={move}>
+                      {move}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </TableCell>
+
+              <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.nextState} onChange={event => transitionUpdate(event, transition.id, "nextState")} /></TableCell>
+              <TableCell>
+                <IconButton disabled={editorIsLocked} onClick={() => deleteRow(transition.id)}>
+                  <ClearIcon color={editorIsLocked ? "disabled" : "error"} />
+                </IconButton>
+              </TableCell>
             </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {transitions.map(transition => (
-              <TableRow key={transition.id} sx={{ backgroundColor: transition.id === activeTransitionID ? "green" : "white" }}>
-                <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.state} onChange={event => transitionUpdate(event, transition.id, "state")} /></TableCell>
-                <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.read} onChange={event => transitionUpdate(event, transition.id, "read")} inputProps={{ maxLength: 1 }} /></TableCell>
-                <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.write} onChange={event => transitionUpdate(event, transition.id, "write")} inputProps={{ maxLength: 1 }} /></TableCell>
-
-                <TableCell align="center">
-                  <TextField disabled={editorIsLocked} size="small" select value={transition.move} onChange={event => transitionUpdate(event, transition.id, "move")}>
-                    {Object.values(MoveDirection).map(move => (
-                      <MenuItem key={move} value={move}>
-                        {move}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </TableCell>
-
-                <TableCell align="center"><TextField disabled={editorIsLocked} size="small" value={transition.nextState} onChange={event => transitionUpdate(event, transition.id, "nextState")} /></TableCell>
-                <TableCell>
-                  <IconButton disabled={editorIsLocked} onClick={() => deleteRow(transition.id)}>
-                    <ClearIcon color={editorIsLocked ? "disabled" : "error"} />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      {!editorIsLocked &&
-        <Button variant="contained" sx={{ borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px" }} fullWidth onClick={newRow}>+</Button>
-      }
-    </Box>
+          ))}
+          <TableRow>
+            <TableCell colSpan={6}>
+              {!editorIsLocked &&
+                <Button variant="contained" sx={{ borderBottomLeftRadius: "20px", borderBottomRightRadius: "20px" }} fullWidth onClick={newRow}>+</Button>
+              }
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
   )
 }
