@@ -20,6 +20,7 @@ export default function useTuringMachine(selections, transitions, oneWayInfinite
     const transition = getTransitions().find(
       transition => transition.id === transitionId
     )
+    if (!transition) throw new Error("Invalid transition ID: Transition supplied is not available in the current configuration")
 
     state.current = transition.nextState
 
