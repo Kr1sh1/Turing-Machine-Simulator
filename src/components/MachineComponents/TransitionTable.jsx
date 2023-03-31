@@ -4,7 +4,7 @@ import {
   TableContainer, TableHead, TableRow,
   TextField } from "@mui/material";
 
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 import ClearIcon from "@mui/icons-material/Clear"
 import { MoveDirection } from "../../Enums";
 import { emptyCellCharacter } from "../../Constants";
@@ -19,13 +19,15 @@ const defaultTransition = {
 }
 
 export default function TransitionTable({ transitions, setTransitions, editorIsLocked, activeTransitionID }) {
-  const [counter, setCounter] = useState(0)
+  const counter = useRef(null)
+
+  counter.current = Math.max(...transitions.map(t => t.id)) + 1
+
 
   const newRow = () => {
     const transition = structuredClone(defaultTransition)
-    transition.id = counter
+    transition.id = counter.current
     setTransitions([...transitions, transition])
-    setCounter(counter => counter + 1)
   }
 
   const deleteRow = (id) => {
