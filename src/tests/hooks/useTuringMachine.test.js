@@ -98,11 +98,41 @@ describe("test getTransitions", () => {
 })
 
 describe("test performTransition", () => {
-  test("", () => {})
+  test("state changes", () => {
+    const tm =  setupTuringMachine(incrementBinaryOneWay.defaultSelections, incrementBinaryOneWay.defaultTransitions, true)
+    tm.reset("0")
+    expect(tm.getConfiguration().state).toBe("S0")
+    tm.performTransition(1)
+    expect(tm.getConfiguration().state).toBe("S0")
+    tm.performTransition(2)
+    expect(tm.getConfiguration().state).toBe("S1")
+    tm.performTransition(3)
+    expect(tm.getConfiguration().state).toBe("Halt")
+  })
 
-  test("", () => {})
+  test("head position changes", () => {
+    const tm =  setupTuringMachine(incrementBinaryOneWay.defaultSelections, incrementBinaryOneWay.defaultTransitions, true)
+    tm.reset("0")
+    expect(tm.getConfiguration().headPosition).toBe(1)
+    tm.performTransition(1)
+    expect(tm.getConfiguration().headPosition).toBe(2)
+    tm.performTransition(2)
+    expect(tm.getConfiguration().headPosition).toBe(1)
+    tm.performTransition(3)
+    expect(tm.getConfiguration().headPosition).toBe(1)
+  })
 
-  test("", () => {})
+  test("tape content changes", () => {
+    const tm =  setupTuringMachine(incrementBinaryOneWay.defaultSelections, incrementBinaryOneWay.defaultTransitions, true)
+    tm.reset("0")
+    expect(tm.getConfiguration().tape.forwardTape).toEqual([..."£0"])
+    tm.performTransition(1)
+    expect(tm.getConfiguration().tape.forwardTape).toEqual([..."£0"])
+    tm.performTransition(2)
+    expect(tm.getConfiguration().tape.forwardTape).toEqual([..."£0_"])
+    tm.performTransition(3)
+    expect(tm.getConfiguration().tape.forwardTape).toEqual([..."£1_"])
+  })
 })
 
 describe("test left-end marker", () => {
