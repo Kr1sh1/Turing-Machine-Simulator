@@ -16,7 +16,7 @@ function makeTransition(id, state, read, write, move, nextState) {
   }
 }
 
-const incrementBinaryTwoWay = makeMachine(
+export const incrementBinaryTwoWay = makeMachine(
   [
     makeTransition(0, "S0", "1", "1", MoveDirection.RIGHT, "S0"),
     makeTransition(1, "S0", "0", "0", MoveDirection.RIGHT, "S0"),
@@ -35,7 +35,7 @@ const incrementBinaryTwoWay = makeMachine(
   true,
 )
 
-const incrementBinaryOneWay = makeMachine(
+export const incrementBinaryOneWay = makeMachine(
   [
     makeTransition(0, "S0", "1", "1", MoveDirection.RIGHT, "S0"),
     makeTransition(1, "S0", "0", "0", MoveDirection.RIGHT, "S0"),
@@ -57,7 +57,7 @@ const incrementBinaryOneWay = makeMachine(
   true,
 )
 
-const binaryDivisibleBy3 = makeMachine(
+export const binaryDivisibleBy3 = makeMachine(
   [
     makeTransition(0, "S0", "1", "1", MoveDirection.RIGHT, "S1"),
     makeTransition(1, "S0", "0", "0", MoveDirection.RIGHT, "S0"),

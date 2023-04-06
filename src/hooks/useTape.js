@@ -89,14 +89,14 @@ export default function useTape(oneWayInfiniteTape, initialValue) {
   }, [oneWayTapeCenterSlice, twoWayTapeCenterSlice, oneWayInfiniteTape])
 
   const setTape = useCallback((tape) => {
-    forwardTape.current = tape.forwardTape
-    backwardTape.current = tape.backwardTape
+    forwardTape.current = [...tape.forwardTape]
+    backwardTape.current = backwardTape.current ? [...tape.backwardTape] : null
   }, [])
 
   const getTape = useCallback(() => {
     return {
-      forwardTape: forwardTape.current,
-      backwardTape: backwardTape.current
+      forwardTape: [...forwardTape.current],
+      backwardTape: backwardTape.current ? [...backwardTape.current] : null
     }
   }, [])
 
