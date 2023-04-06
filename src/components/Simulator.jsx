@@ -75,6 +75,8 @@ export default memo(function Simulator({ selections, transitions, oneWayInfinite
   useEffect(() => {
     if (simulatorStatus !== SimulatorState.RUNNING) return
 
+    if (nodes.length % 50 === 0) enqueueSnackbar("Some computations can run forever...", {variant: "warning"})
+
     const changeActiveNodeClass = (className) => {
       setNodes(nodes =>
         nodes.map(node => {
