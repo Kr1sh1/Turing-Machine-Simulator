@@ -24,6 +24,7 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
   const activeRow = useRef(null)
 
   counter.current = Math.max(...transitions.map(t => t.id)) + 1
+  if (counter.current === -Infinity) counter.current = 0
 
   useEffect(() => {
     if (activeTransitionID >= 0) activeRow.current.scrollIntoView({ behavior: "smooth", block: "center" })
