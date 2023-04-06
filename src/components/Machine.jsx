@@ -45,7 +45,7 @@ export default memo(function Machine({
   const states = [...uniqueStates]
   states.sort()
 
-  const selectionsCopy = structuredClone(selections)
+  const selectionsCopy = {...selections}
   let selectionChanged = false
   Object.keys(selections).forEach(type => {
     if (selections[type] !== "" && !states.includes(selections[type])) {

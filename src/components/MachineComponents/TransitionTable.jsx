@@ -30,7 +30,7 @@ export default function TransitionTable({ transitions, setTransitions, editorIsL
   }, [activeTransitionID])
 
   const newRow = () => {
-    const transition = structuredClone(defaultTransition)
+    const transition = {...defaultTransition}
     transition.id = counter.current
     setTransitions([...transitions, transition])
   }

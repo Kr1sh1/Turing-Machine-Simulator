@@ -17,7 +17,7 @@ export default memo(function Tape({ configuration, getCenteredSlice }) {
     if (!configuration.tape.backwardTape) {
       text += configuration.tape.forwardTape.slice(1).join("")
     } else {
-      text += structuredClone(configuration.tape.backwardTape).reverse().join("") + configuration.tape.forwardTape.join("")
+      text += [...configuration.tape.backwardTape].reverse().join("") + configuration.tape.forwardTape.join("")
     }
     text = text.replaceAll(/^_+|_+$/g, "")
     navigator.clipboard.writeText(text).then(
