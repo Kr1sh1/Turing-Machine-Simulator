@@ -12,7 +12,7 @@ const savedFileKeyMap = Object.freeze({
   haltingState: "defaultHaltingState",
 })
 
-export default function Machines() {
+export default function MachinePage() {
   const [anchorEl, setAnchorEl] = useState(null)
   const [defaultMachine, setDefaultMachine] = useState({})
   const [activeMachine, setActiveMachine] = useState({})
